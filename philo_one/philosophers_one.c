@@ -1,16 +1,25 @@
 
 #include "one.h"
 #include <pthread.h>
-#include "stdlib.h"
+#include <stdlib.h>
+#include <sys/time.h>
 
 void	*fphilosophers(void	*v_philosopher)
 {
-	t_phil *philosopher;
+	t_phil *phil;
 
-	philosopher = (t_phil*)v_philosopher;
-	while (philosopher->stats->dead == false)
+	phil = (t_phil*)v_philosopher;
+	phil_msg(phil, "appeared!");
+	while (phil->stats->dead == false)
 	{
-		state_eat(philosopher);
+		if (phil->stats->must_eat && phil->times_eaten == phil->stats->must_eat)
+		{
+			phil_msg(phil, "is done eating");
+			return (NULL);
+		}
+		state_eat(phil);
+		if (phil->stats->dead == false)
+			state_sleep(phil);
 	}
 	return (NULL);
 }
@@ -42,16 +51,18 @@ int		stat_init(t_stats *stats, char **str, int argc)
 
 void	phil_init(t_phil *phil, t_stats *stats, int id)
 {
-		phil->stats = stats;
-		phil->id = id;
-		phil->time_since_eaten = 0;
-		phil->times_eaten = 0;
-		phil->l_chop = phil->id + 1;
-		phil->r_chop = phil->id - 1;
-		if (phil->l_chop > phil->stats->phil_amount)
-		phil->l_chop = 0;
-		if (phil->r_chop < 0)
-		phil->r_chop = phil->stats->phil_amount - 1;
+	struct timeval current_time;
+	gettimeofday(&current_time, NULL);
+	phil->stats = stats;
+	phil->id = id;
+	phil->time_since_eaten = current_time.tv_sec * 1000;
+	phil->times_eaten = 0;
+	phil->l_chop = phil->id + 1;
+	phil->r_chop = phil->id - 1;
+	if (phil->l_chop > phil->stats->phil_amount)
+	phil->l_chop = 0;
+	if (phil->r_chop < 0)
+	phil->r_chop = phil->stats->phil_amount - 1;
 }
 
 int main(int argc, char **argv)

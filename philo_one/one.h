@@ -24,7 +24,7 @@ typedef struct	s_stats
 typedef struct	s_phil
 {
 	unsigned int	id;
-	unsigned int	time_since_eaten;
+	unsigned long long	time_since_eaten;
 	unsigned int	times_eaten;
 	int				l_chop;
 	int				r_chop;
@@ -33,7 +33,9 @@ typedef struct	s_phil
 
 
 int		ft_atoi(char *str);
-int		state_eat(t_phil *phil);
+void	state_eat(t_phil *phil);
+void	state_sleep(t_phil *phil);
 void	phil_msg(t_phil *phil, char *msg);
+void	check_death(t_phil *phil);
 
 #endif

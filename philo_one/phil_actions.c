@@ -2,38 +2,41 @@
 #include "one.h"
 #include <pthread.h>
 #include "unistd.h"
+#include <sys/time.h>
 
-int		state_sleep(t_phil *phil)
+void	state_sleep(t_phil *phil)
 {
+	check_death(phil);
+	if (phil->stats->dead == true)
+		return ;
 	phil_msg(phil, "is sleeping");
 	usleep(phil->stats->time_to_sleep);
 	phil_msg(phil, "is thinking");
-	return (1);
+	return ;
 }
 
-int		state_eat(t_phil *phil)
+void	state_eat(t_phil *phil)
 {
-	int	status;
+	struct timeval current_time;
 
+	check_death(phil);
 	if (phil->stats->dead == true)
-		return (-1);
-	status = pthread_mutex_lock(&(phil->stats->chopsticks[phil->l_chop]));
-	if (status)
-		return (-1);
+		return ;
+	pthread_mutex_lock(&(phil->stats->chopsticks[phil->l_chop]));
 	phil_msg(phil, "has taken a fork");
-	status = pthread_mutex_lock(&(phil->stats->chopsticks[phil->r_chop]));
-	if (status)
-	{
-		pthread_mutex_unlock(&(phil->stats->chopsticks[phil->l_chop]));
-		phil_msg(phil, "has dropped a fork");
-	}
+	check_death(phil);
+	if (phil->stats->dead == true)
+		return ;
+	pthread_mutex_lock(&(phil->stats->chopsticks[phil->r_chop]));
 	phil_msg(phil, "has taken a fork");
+	phil_msg(phil, "is eating");
 	usleep(phil->stats->time_to_eat);
 	pthread_mutex_unlock(&(phil->stats->chopsticks[phil->l_chop]));
 	phil_msg(phil, "has dropped a fork");
 	pthread_mutex_unlock(&(phil->stats->chopsticks[phil->r_chop]));
 	phil_msg(phil, "has dropped a fork");
 	phil->times_eaten++;
-	state_sleep(phil);
-	return (0);
+	gettimeofday(&current_time, NULL);
+	phil->time_since_eaten = current_time.tv_sec * 1000;
+	return ;
 }

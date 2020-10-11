@@ -3,6 +3,22 @@
 #include "unistd.h"
 #include <sys/time.h>
 
+void		check_death(t_phil *phil)
+{
+	struct timeval current_time;
+	gettimeofday(&current_time, NULL);
+	// pthread_mutex_lock(&(phil->stats->write));
+	// printf("[%llu] >= [%d]\n", (current_time.tv_sec * 1000) - phil->time_since_eaten, phil->stats->time_to_die / 1000);
+	// printf("[%llu] >= [%d]\n", phil->time_since_eaten, phil->stats->time_to_die / 1000);
+	// printf("[%ld] >= [%d]\n", (current_time.tv_sec * 1000), phil->stats->time_to_die / 1000);
+	// pthread_mutex_unlock(&(phil->stats->write));
+	if ((current_time.tv_sec * 1000) - phil->time_since_eaten >= phil->stats->time_to_die / 1000)
+	{
+		phil->stats->dead = true;
+		phil_msg(phil, "has died from starvation");
+	}
+}
+
 static int	ft_strlen(char *str)
 {
 	int i;
