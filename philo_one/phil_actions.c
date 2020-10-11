@@ -29,6 +29,9 @@ void	state_eat(t_phil *phil)
 		return ;
 	pthread_mutex_lock(&(phil->stats->chopsticks[phil->r_chop]));
 	phil_msg(phil, "has taken a fork");
+	check_death(phil);
+	if (phil->stats->dead == true)
+		return ;
 	phil_msg(phil, "is eating");
 	usleep(phil->stats->time_to_eat);
 	pthread_mutex_unlock(&(phil->stats->chopsticks[phil->l_chop]));
