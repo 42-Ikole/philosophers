@@ -18,6 +18,7 @@ typedef struct	s_stats
 	unsigned int	must_eat;
 	t_bool			dead;
 	pthread_mutex_t	*chopsticks;
+	pthread_mutex_t write;
 }				t_stats;
 
 typedef struct	s_phil
@@ -25,13 +26,14 @@ typedef struct	s_phil
 	unsigned int	id;
 	unsigned int	time_since_eaten;
 	unsigned int	times_eaten;
-	t_bool			l_chop;
-	t_bool			r_chop;
+	int				l_chop;
+	int				r_chop;
 	t_stats			*stats;
 }				t_phil;
 
 
-int	ft_atoi(char *str);
-int	eat(t_phil *phil);
+int		ft_atoi(char *str);
+int		state_eat(t_phil *phil);
+void	phil_msg(t_phil *phil, char *msg);
 
 #endif

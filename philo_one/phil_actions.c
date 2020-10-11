@@ -2,37 +2,38 @@
 #include "one.h"
 #include <pthread.h>
 #include "unistd.h"
-#include "stdio.h" //
 
-int		eat(t_phil *phil)
+int		state_sleep(t_phil *phil)
 {
-	int lc;
-	int rc;
+	phil_msg(phil, "is sleeping");
+	usleep(phil->stats->time_to_sleep);
+	phil_msg(phil, "is thinking");
+	return (1);
+}
+
+int		state_eat(t_phil *phil)
+{
 	int	status;
 
 	if (phil->stats->dead == true)
 		return (-1);
-	lc = phil->id + 1;
-	rc = phil->id - 1;
-	if (lc > phil->stats->phil_amount)
-		lc = 0;
-	if (rc < 0)
-		rc = phil->stats->phil_amount - 1;
-	status = pthread_mutex_trylock(&(phil->stats->chopsticks[lc]));
+	status = pthread_mutex_lock(&(phil->stats->chopsticks[phil->l_chop]));
 	if (status)
 		return (-1);
-	printf("%i has taken fork\n", phil->id);
-	status = pthread_mutex_trylock(&(phil->stats->chopsticks[rc]));
+	phil_msg(phil, "has taken a fork");
+	status = pthread_mutex_lock(&(phil->stats->chopsticks[phil->r_chop]));
 	if (status)
 	{
-		pthread_mutex_unlock(&(phil->stats->chopsticks[lc]));
-		printf("%i has dropped fork\n", phil->id);
+		pthread_mutex_unlock(&(phil->stats->chopsticks[phil->l_chop]));
+		phil_msg(phil, "has dropped a fork");
 	}
-	printf("%i has taken fork\n", phil->id);
+	phil_msg(phil, "has taken a fork");
 	usleep(phil->stats->time_to_eat);
-	pthread_mutex_unlock(&(phil->stats->chopsticks[lc]));
-	printf("%i has dropped fork\n", phil->id);
-	pthread_mutex_unlock(&(phil->stats->chopsticks[rc]));
-	printf("%i has dropped fork\n", phil->id);
+	pthread_mutex_unlock(&(phil->stats->chopsticks[phil->l_chop]));
+	phil_msg(phil, "has dropped a fork");
+	pthread_mutex_unlock(&(phil->stats->chopsticks[phil->r_chop]));
+	phil_msg(phil, "has dropped a fork");
+	phil->times_eaten++;
+	state_sleep(phil);
 	return (0);
 }
