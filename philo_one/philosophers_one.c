@@ -1,63 +1,84 @@
 
 #include "one.h"
+#include <pthread.h>
+#include "stdlib.h"
 
-void	philosophers(t_stats *stats, int philosopher)
+void	*fphilosophers(void	*v_philosopher)
 {
-	while (1)
+	t_phil *philosopher;
+
+	philosopher = (t_phil*)v_philosopher;
+	while (philosopher->stats->dead == false)
 	{
-		
+		eat(philosopher);
 	}
+	return (NULL);
 }
 
-t_stats	init(t_stats stats, char **str)
+int		stat_init(t_stats *stats, char **str, int argc)
 {
 	int i;
 
-	stats.phil_amount = ft_atoi(str[1]);
-	stats.time_to_die = ft_atoi(str[2]);
-	stats.time_to_eat = ft_atoi(str[3]);
-	stats.time_to_sleep = ft_atoi(str[4]);
-	stats.must_eat = ft_atoi(str[5]);
-	stats.queue = malloc(sizeof(int *) * stats.phil_amount);
-	if (!stats.queue)
-		return (1);
+	stats->phil_amount = ft_atoi(str[1]);
+	stats->time_to_die = ft_atoi(str[2]);
+	stats->time_to_eat = ft_atoi(str[3]);
+	stats->time_to_sleep = ft_atoi(str[4]);
+	if (argc == 6)
+		stats->must_eat = ft_atoi(str[5]);
+	else
+		stats->must_eat = 0;
+	stats->chopsticks = malloc(sizeof(pthread_mutex_t) * stats->phil_amount);
+	if (!stats->chopsticks)
+		return (-1);
 	i = 0;
-	while (i < stats.phil_amount)
+	while (i < stats->phil_amount)
 	{
-		stats.queue[i] = malloc(sizeof(int) * 2);
-		if (stats.queue[i])
-			return (1);
-		stats.queue[i][0] = i; //pk philosopher	
-		stats.queue[i][1] = 0; //time since eaten
+		pthread_mutex_init(&(stats->chopsticks[i]), NULL); //check of hij faalt
 		i++;
 	}
+	return (0);
+}
 
-	return (stats);
+void	phil_init(t_phil *phil, t_stats *stats, int id)
+{
+		phil->stats = stats;
+		phil->id = id;
+		phil->time_since_eaten = 0;
+		phil->times_eaten = 0;
+		phil->l_chop = false;
+		phil->r_chop = false;
 }
 
 int main(int argc, char **argv)
 {
-    t_stats		stats;
+	t_stats		stats;
+    t_phil		*philosophers;
 	int			i;
+	pthread_t	*threads;
 
-    if (argc != 6)
-        return (1);
-	stats = init(stats, argv);
-	stats.philosophers = malloc(sizeof(pthread_t) * stats.phil_amount);
-	if (!stats.philosophers)
-		return (1);
+    if (!(argc == 5 || argc == 6))
+        return (1); //
+	if(stat_init(&stats, argv, argc) == -1)
+		return (1); //
+	threads = malloc(sizeof(pthread_t) * stats.phil_amount);
+	if (!threads)
+		return (1); //
+	philosophers = malloc(sizeof(t_phil) * stats.phil_amount);
+	if (!philosophers)
+		return (1); //
 	i = 0;
 	while (i < stats.phil_amount)
 	{
 		//create threads here
-		pthread_create(&stats.philosophers[i], NULL, philosophers, &stats);
-		philosophers(&stats, i);
+		phil_init(&(philosophers[i]), &stats, i);
+		if (pthread_create(&(threads[i]), NULL, fphilosophers, &(philosophers[i]))) // oude threads weghalen
+			return (1); //
 		i++;
 	}
 	i = 0;
 	while (i < stats.phil_amount)
 	{
-		pthread_join(stats.philosophers[i], NULL);
+		pthread_join(threads[i], NULL);
 		i++;
 	}
 	return (0);

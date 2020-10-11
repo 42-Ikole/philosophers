@@ -20,27 +20,3 @@ int	ft_atoi(char *str)
 	}
 	return ((int)(res * sgn));
 }
-
-void	sort_philosophers(t_stats *stats)
-{
-	register int	i;
-	register int	j;
-	register int	*tmp;
-
-	i = 0;
-	while (i < stats->phil_amount)
-	{
-		j = i + 1;
-		while (j < stats->phil_amount)
-		{
-			if (stats->queue[i][1] < stats->queue[j][1])
-			{
-				tmp = stats->queue[i];
-				stats->queue[i] = stats->queue[j];
-				stats->queue[j] = tmp;
-			}
-			j++;
-		}
-		i++;
-	}
-}
