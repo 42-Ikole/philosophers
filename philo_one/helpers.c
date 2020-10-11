@@ -14,8 +14,8 @@ void		check_death(t_phil *phil)
 	// pthread_mutex_unlock(&(phil->stats->write));
 	if ((current_time.tv_sec * 1000) - phil->time_since_eaten >= phil->stats->time_to_die / 1000)
 	{
-		phil->stats->dead = true;
 		phil_msg(phil, "has died from starvation");
+		phil->stats->dead = true;
 	}
 }
 
@@ -55,13 +55,16 @@ void	phil_msg(t_phil *phil, char *msg)
 	struct timeval current_time;
 
 	pthread_mutex_lock(&(phil->stats->write));
-	gettimeofday(&current_time, NULL);
-	ft_putnbr(current_time.tv_sec * 1000);
-	write(1, " [", 2);
-	ft_putnbr(phil->id);
-	write(1, "] ", 2);
-	write(1, msg, ft_strlen(msg));
-	write(1, "\n", 1);
+	if (phil->stats->dead == false)
+	{
+		gettimeofday(&current_time, NULL);
+		ft_putnbr(current_time.tv_sec * 1000);
+		write(1, " [", 2);
+		ft_putnbr(phil->id);
+		write(1, "] ", 2);
+		write(1, msg, ft_strlen(msg));
+		write(1, "\n", 1);
+	}
 	pthread_mutex_unlock(&(phil->stats->write));
 }
 
