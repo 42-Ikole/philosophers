@@ -2,17 +2,23 @@
 #include "one.h"
 #include "unistd.h"
 #include <sys/time.h>
+#include <stdio.h>
+
+
+unsigned long long get_time()
+{
+	struct timeval current_time;
+
+	gettimeofday(&current_time, NULL);
+	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
+}
 
 void		check_death(t_phil *phil)
 {
-	struct timeval current_time;
-	gettimeofday(&current_time, NULL);
-	// pthread_mutex_lock(&(phil->stats->write));
-	// printf("[%llu] >= [%d]\n", (current_time.tv_sec * 1000) - phil->time_since_eaten, phil->stats->time_to_die / 1000);
-	// printf("[%llu] >= [%d]\n", phil->time_since_eaten, phil->stats->time_to_die / 1000);
-	// printf("[%ld] >= [%d]\n", (current_time.tv_sec * 1000), phil->stats->time_to_die / 1000);
-	// pthread_mutex_unlock(&(phil->stats->write));
-	if ((current_time.tv_sec * 1000) - phil->time_since_eaten >= phil->stats->time_to_die / 1000)
+	unsigned long long time;
+
+	time = get_time();
+	if (time - phil->time_since_eaten >= phil->stats->time_to_die && phil->times_eaten < phil->stats->must_eat)
 	{
 		phil_msg(phil, "has died from starvation");
 		phil->stats->dead = true;
@@ -29,21 +35,10 @@ static int	ft_strlen(char *str)
 	return (i);
 }
 
-static void	ft_putnbr(int n)
+static void	ft_putnbr(unsigned long long n)
 {
 	char print[1];
 
-	if (n == -2147483648)
-	{
-		ft_putnbr(-214748364);
-		write(1, "8", 1);
-		return ;
-	}
-	if (n < 0)
-	{
-		write(1, "-", 1);
-		n *= -1;
-	}
 	if (n > 10)
 		ft_putnbr(n / 10);
 	*print = n % 10 + 48;
@@ -52,13 +47,13 @@ static void	ft_putnbr(int n)
 
 void	phil_msg(t_phil *phil, char *msg)
 {
-	struct timeval current_time;
+	unsigned long long	kut;
 
 	pthread_mutex_lock(&(phil->stats->write));
+	kut = get_time();
 	if (phil->stats->dead == false)
 	{
-		gettimeofday(&current_time, NULL);
-		ft_putnbr(current_time.tv_sec * 1000);
+		ft_putnbr(kut - phil->stats->start);
 		write(1, " [", 2);
 		ft_putnbr(phil->id);
 		write(1, "] ", 2);

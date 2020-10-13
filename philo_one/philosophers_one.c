@@ -2,7 +2,6 @@
 #include "one.h"
 #include <pthread.h>
 #include <stdlib.h>
-#include <sys/time.h>
 
 void	*fphilosophers(void	*v_philosopher)
 {
@@ -10,6 +9,10 @@ void	*fphilosophers(void	*v_philosopher)
 
 	phil = (t_phil*)v_philosopher;
 	phil_msg(phil, "appeared!");
+	// if (phil->id % 2)
+	// 	state_eat(phil);
+	// else
+	// 	state_sleep(phil);
 	while (phil->stats->dead == false)
 	{
 		if (phil->stats->must_eat && phil->times_eaten == phil->stats->must_eat)
@@ -17,52 +20,30 @@ void	*fphilosophers(void	*v_philosopher)
 			phil_msg(phil, "is done eating");
 			return (NULL);
 		}
-		state_eat(phil);
+		if (phil->stats->dead == false)
+			state_eat(phil);
 		if (phil->stats->dead == false)
 			state_sleep(phil);
 	}
 	return (NULL);
 }
 
-int		stat_init(t_stats *stats, char **str, int argc)
+void	monitor(t_phil *phil)
 {
 	int i;
 
-	stats->phil_amount = ft_atoi(str[1]);
-	stats->time_to_die = ft_atoi(str[2]) * 1000;
-	stats->time_to_eat = ft_atoi(str[3]) * 1000;
-	stats->time_to_sleep = ft_atoi(str[4]) * 1000;
-	if (argc == 6)
-		stats->must_eat = ft_atoi(str[5]);
-	else
-		stats->must_eat = 0;
-	stats->chopsticks = malloc(sizeof(pthread_mutex_t) * stats->phil_amount);
-	if (!stats->chopsticks)
-		return (-1);
 	i = 0;
-	while (i < stats->phil_amount)
+	while (i < phil->stats->phil_amount)
 	{
-		pthread_mutex_init(&(stats->chopsticks[i]), NULL); //check of hij faalt
+		if (phil->stats->dead == true)
+			break ;
+		pthread_mutex_lock(&(phil->stats->eatsies[i]));
+		check_death(&(phil[i]));
+		pthread_mutex_unlock(&(phil->stats->eatsies[i]));
 		i++;
+		if (i == phil->stats->phil_amount)
+			i = 0;
 	}
-	pthread_mutex_init(&(stats->write), NULL);
-	return (0);
-}
-
-void	phil_init(t_phil *phil, t_stats *stats, int id)
-{
-	struct timeval current_time;
-	gettimeofday(&current_time, NULL);
-	phil->stats = stats;
-	phil->id = id;
-	phil->time_since_eaten = current_time.tv_sec * 1000;
-	phil->times_eaten = 0;
-	phil->l_chop = phil->id + 1;
-	phil->r_chop = phil->id - 1;
-	if (phil->l_chop > phil->stats->phil_amount)
-	phil->l_chop = 0;
-	if (phil->r_chop < 0)
-	phil->r_chop = phil->stats->phil_amount - 1;
 }
 
 int main(int argc, char **argv)
@@ -79,6 +60,7 @@ int main(int argc, char **argv)
 	threads = malloc(sizeof(pthread_t) * stats.phil_amount);
 	if (!threads)
 		return (1); //
+	stats.eatsies = malloc(sizeof(pthread_mutex_t) * stats.phil_amount);
 	philosophers = malloc(sizeof(t_phil) * stats.phil_amount);
 	if (!philosophers)
 		return (1); //
@@ -87,10 +69,12 @@ int main(int argc, char **argv)
 	{
 		//create threads here
 		phil_init(&(philosophers[i]), &stats, i);
+		pthread_mutex_init(&(stats.eatsies[i]), NULL);
 		if (pthread_create(&(threads[i]), NULL, fphilosophers, &(philosophers[i]))) // oude threads weghalen
 			return (1); //
 		i++;
 	}
+	monitor(philosophers);
 	i = 0;
 	while (i < stats.phil_amount)
 	{

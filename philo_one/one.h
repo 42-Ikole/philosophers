@@ -19,6 +19,8 @@ typedef struct	s_stats
 	t_bool			dead;
 	pthread_mutex_t	*chopsticks;
 	pthread_mutex_t write;
+	pthread_mutex_t	*eatsies;
+	unsigned long long start;
 }				t_stats;
 
 typedef struct	s_phil
@@ -37,5 +39,8 @@ void	state_eat(t_phil *phil);
 void	state_sleep(t_phil *phil);
 void	phil_msg(t_phil *phil, char *msg);
 void	check_death(t_phil *phil);
+int		stat_init(t_stats *stats, char **str, int argc);
+void	phil_init(t_phil *phil, t_stats *stats, int id);
+unsigned long long	get_time();
 
 #endif
