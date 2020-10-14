@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 
-unsigned long long get_time()
+unsigned long get_time()
 {
 	struct timeval current_time;
 
@@ -15,7 +15,7 @@ unsigned long long get_time()
 
 void		check_death(t_phil *phil)
 {
-	unsigned long long time;
+	unsigned long time;
 
 	time = get_time();
 	if (time - phil->time_since_eaten >= phil->stats->time_to_die && phil->times_eaten < phil->stats->must_eat)
@@ -35,7 +35,7 @@ static int	ft_strlen(char *str)
 	return (i);
 }
 
-static void	ft_putnbr(unsigned long long n)
+static void	ft_putnbr(unsigned long n)
 {
 	char print[1];
 
@@ -47,7 +47,7 @@ static void	ft_putnbr(unsigned long long n)
 
 void	phil_msg(t_phil *phil, char *msg)
 {
-	unsigned long long	kut;
+	unsigned long	kut;
 
 	pthread_mutex_lock(&(phil->stats->write));
 	kut = get_time();
@@ -65,8 +65,8 @@ void	phil_msg(t_phil *phil, char *msg)
 
 int	ft_atoi(char *str)
 {
-	long long res;
-	long long sgn;
+	long res;
+	long sgn;
 
 	res = 0;
 	sgn = 1;

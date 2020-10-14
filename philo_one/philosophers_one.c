@@ -3,16 +3,12 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-void	*fphilosophers(void	*v_philosopher)
+void	*do_things(void	*v_philosopher)
 {
 	t_phil *phil;
 
 	phil = (t_phil*)v_philosopher;
 	phil_msg(phil, "appeared!");
-	// if (phil->id % 2)
-	// 	state_eat(phil);
-	// else
-	// 	state_sleep(phil);
 	while (phil->stats->dead == false)
 	{
 		if (phil->stats->must_eat && phil->times_eaten == phil->stats->must_eat)
@@ -21,7 +17,7 @@ void	*fphilosophers(void	*v_philosopher)
 			return (NULL);
 		}
 		if (phil->stats->dead == false)
-			state_eat(phil);
+			take_chopstick(phil);
 		if (phil->stats->dead == false)
 			state_sleep(phil);
 	}
@@ -46,40 +42,49 @@ void	monitor(t_phil *phil)
 	}
 }
 
-int main(int argc, char **argv)
+void	create_threads(t_phil *phil, t_stats stats)
 {
-	t_stats		stats;
-    t_phil		*philosophers;
-	int			i;
 	pthread_t	*threads;
+	int			i;
 
-    if (!(argc == 5 || argc == 6))
-        return (1); //
-	if(stat_init(&stats, argv, argc) == -1)
-		return (1); //
 	threads = malloc(sizeof(pthread_t) * stats.phil_amount);
 	if (!threads)
-		return (1); //
-	stats.eatsies = malloc(sizeof(pthread_mutex_t) * stats.phil_amount);
-	philosophers = malloc(sizeof(t_phil) * stats.phil_amount);
-	if (!philosophers)
-		return (1); //
+		return ; //
 	i = 0;
 	while (i < stats.phil_amount)
 	{
 		//create threads here
-		phil_init(&(philosophers[i]), &stats, i);
+		phil_init(&(phil[i]), &stats, i);
 		pthread_mutex_init(&(stats.eatsies[i]), NULL);
-		if (pthread_create(&(threads[i]), NULL, fphilosophers, &(philosophers[i]))) // oude threads weghalen
-			return (1); //
+		if (pthread_create(&(threads[i]), NULL, do_things, &(phil[i]))) // oude threads weghalen
+			return ; //
 		i++;
 	}
-	monitor(philosophers);
+	monitor(phil);
 	i = 0;
 	while (i < stats.phil_amount)
 	{
 		pthread_join(threads[i], NULL);
 		i++;
 	}
+}
+
+
+int 	main(int argc, char **argv)
+{
+	t_stats		stats;
+    t_phil		*phil;
+
+    if (!(argc == 5 || argc == 6))
+        return (1); //
+	if(stat_init(&stats, argv, argc) == -1)
+		return (1); //
+	stats.eatsies = malloc(sizeof(pthread_mutex_t) * stats.phil_amount);
+	if (!stats.eatsies)
+		return (1);
+	phil = malloc(sizeof(t_phil) * stats.phil_amount);
+	if (!phil)
+		return (1); //
+	create_threads(phil, stats);
 	return (0);
 }

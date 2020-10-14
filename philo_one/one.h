@@ -20,13 +20,13 @@ typedef struct	s_stats
 	pthread_mutex_t	*chopsticks;
 	pthread_mutex_t write;
 	pthread_mutex_t	*eatsies;
-	unsigned long long start;
+	unsigned long start;
 }				t_stats;
 
 typedef struct	s_phil
 {
 	unsigned int	id;
-	unsigned long long	time_since_eaten;
+	unsigned long	time_since_eaten;
 	unsigned int	times_eaten;
 	int				l_chop;
 	int				r_chop;
@@ -34,13 +34,14 @@ typedef struct	s_phil
 }				t_phil;
 
 
-int		ft_atoi(char *str);
-void	state_eat(t_phil *phil);
-void	state_sleep(t_phil *phil);
-void	phil_msg(t_phil *phil, char *msg);
-void	check_death(t_phil *phil);
-int		stat_init(t_stats *stats, char **str, int argc);
-void	phil_init(t_phil *phil, t_stats *stats, int id);
-unsigned long long	get_time();
+int				ft_atoi(char *str);
+void			state_eat(t_phil *phil);
+void			state_sleep(t_phil *phil);
+void			phil_msg(t_phil *phil, char *msg);
+void			check_death(t_phil *phil);
+int				stat_init(t_stats *stats, char **str, int argc);
+void			phil_init(t_phil *phil, t_stats *stats, int id);
+unsigned long	get_time();
+void			take_chopstick(t_phil *phil);
 
 #endif
