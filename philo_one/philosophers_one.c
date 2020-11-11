@@ -14,6 +14,7 @@ void	*do_things(void	*v_philosopher)
 		if (phil->stats->must_eat > 0 && phil->times_eaten == phil->stats->must_eat)
 		{
 			phil_msg(phil, "is done eating");
+			phil->stats->done++;
 			return (NULL);
 		}
 		if (phil->stats->dead == false)
@@ -26,19 +27,20 @@ void	*do_things(void	*v_philosopher)
 
 void	monitor(t_phil *phil)
 {
-	unsigned int i;
+	unsigned int	i;
+	unsigned int	done_eating;
 
 	i = 0;
+	done_eating = 0;
 	while (i < phil->stats->phil_amount)
 	{
 		if (phil->stats->dead == true)
 			break ;
-		if ((phil->stats->must_eat > 0 && phil[i].times_eaten < phil->stats->must_eat) || phil->stats->must_eat <= 0)
-		{
-			pthread_mutex_lock(&(phil->stats->eatsies[i]));
-			check_death(&(phil[i]));
-			pthread_mutex_unlock(&(phil->stats->eatsies[i]));
-		}
+		else if (phil->stats->must_eat >= 0 && phil->stats->done == phil->stats->phil_amount)
+			break ;
+		pthread_mutex_lock(&(phil->stats->eatsies[i]));
+		check_death(&(phil[i]));
+		pthread_mutex_unlock(&(phil->stats->eatsies[i]));
 		i++;
 		if (i == phil->stats->phil_amount)
 			i = 0;
@@ -67,6 +69,7 @@ void	create_threads(t_phil *phil, t_stats stats)
 	i = 0;
 	while (i < stats.phil_amount)
 	{
+		pthread_mutex_destroy(&phil->stats->chopsticks[i]);
 		pthread_join(threads[i], NULL);
 		i++;
 	}

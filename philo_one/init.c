@@ -15,6 +15,7 @@ int		stat_init(t_stats *stats, char **str, int argc)
 		stats->must_eat = ft_atoi(str[5]);
 	else
 		stats->must_eat = 0;
+	stats->done = 0;
 	stats->chopsticks = malloc(sizeof(pthread_mutex_t) * stats->phil_amount);
 	if (!stats->chopsticks)
 		return (-1);
@@ -37,8 +38,9 @@ void	phil_init(t_phil *phil, t_stats *stats, int id)
 	phil->times_eaten = 0;
 	phil->l_chop = phil->id + 1;
 	phil->r_chop = phil->id - 1;
-	if (phil->l_chop > phil->stats->phil_amount)
+	if (phil->l_chop >= (int)phil->stats->phil_amount)
 		phil->l_chop = 0;
 	if (phil->r_chop < 0)
 		phil->r_chop = phil->stats->phil_amount - 1;
+	printf("l = [%d] - r = [%d]\n", phil->l_chop, phil->r_chop);
 }

@@ -1,7 +1,8 @@
 #ifndef ONE_H
 # define ONE_H
 
-#include <pthread.h>
+# include <pthread.h>
+# include <stdio.h> //
 
 typedef enum	e_bool
 {
@@ -16,6 +17,7 @@ typedef struct	s_stats
     unsigned int	time_to_eat;
 	unsigned int	time_to_sleep;
 	unsigned int	must_eat;
+	unsigned int	done;
 	t_bool			dead;
 	pthread_mutex_t	*chopsticks;
 	pthread_mutex_t write;
@@ -28,8 +30,8 @@ typedef struct	s_phil
 	unsigned int	id;
 	unsigned long	time_since_eaten;
 	unsigned int	times_eaten;
-	unsigned int	l_chop;
-	unsigned int	r_chop;
+	int				l_chop;
+	int				r_chop;
 	t_stats			*stats;
 }				t_phil;
 
