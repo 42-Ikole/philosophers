@@ -1,7 +1,7 @@
 
 #include "one.h"
 #include <pthread.h>
-#include "unistd.h"
+#include <unistd.h>
 #include <sys/time.h>
 
 void	state_sleep(t_phil *phil)

@@ -5,7 +5,7 @@
 
 int		stat_init(t_stats *stats, char **str, int argc)
 {
-	int i;
+	unsigned int i;
 
 	stats->phil_amount = ft_atoi(str[1]);
 	stats->time_to_die = ft_atoi(str[2]);

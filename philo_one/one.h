@@ -28,8 +28,8 @@ typedef struct	s_phil
 	unsigned int	id;
 	unsigned long	time_since_eaten;
 	unsigned int	times_eaten;
-	int				l_chop;
-	int				r_chop;
+	unsigned int	l_chop;
+	unsigned int	r_chop;
 	t_stats			*stats;
 }				t_phil;
 

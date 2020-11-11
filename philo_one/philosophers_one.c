@@ -11,7 +11,7 @@ void	*do_things(void	*v_philosopher)
 	phil_msg(phil, "appeared!");
 	while (phil->stats->dead == false)
 	{
-		if (phil->stats->must_eat && phil->times_eaten == phil->stats->must_eat)
+		if (phil->stats->must_eat > 0 && phil->times_eaten == phil->stats->must_eat)
 		{
 			phil_msg(phil, "is done eating");
 			return (NULL);
@@ -26,16 +26,19 @@ void	*do_things(void	*v_philosopher)
 
 void	monitor(t_phil *phil)
 {
-	int i;
+	unsigned int i;
 
 	i = 0;
 	while (i < phil->stats->phil_amount)
 	{
 		if (phil->stats->dead == true)
 			break ;
-		pthread_mutex_lock(&(phil->stats->eatsies[i]));
-		check_death(&(phil[i]));
-		pthread_mutex_unlock(&(phil->stats->eatsies[i]));
+		if ((phil->stats->must_eat > 0 && phil[i].times_eaten < phil->stats->must_eat) || phil->stats->must_eat <= 0)
+		{
+			pthread_mutex_lock(&(phil->stats->eatsies[i]));
+			check_death(&(phil[i]));
+			pthread_mutex_unlock(&(phil->stats->eatsies[i]));
+		}
 		i++;
 		if (i == phil->stats->phil_amount)
 			i = 0;
@@ -44,8 +47,8 @@ void	monitor(t_phil *phil)
 
 void	create_threads(t_phil *phil, t_stats stats)
 {
-	pthread_t	*threads;
-	int			i;
+	pthread_t		*threads;
+	unsigned int	i;
 
 	threads = malloc(sizeof(pthread_t) * stats.phil_amount);
 	if (!threads)
