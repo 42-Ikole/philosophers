@@ -32,15 +32,21 @@ int		stat_init(t_stats *stats, char **str, int argc)
 
 void	phil_init(t_phil *phil, t_stats *stats, int id)
 {
+	int	tmp;
+
 	phil->stats = stats;
 	phil->id = id;
 	phil->time_since_eaten = get_time();
 	phil->times_eaten = 0;
-	phil->l_chop = phil->id + 1;
+	phil->l_chop = phil->id;
 	phil->r_chop = phil->id - 1;
-	if (phil->l_chop >= (int)phil->stats->phil_amount)
-		phil->l_chop = 0;
 	if (phil->r_chop < 0)
 		phil->r_chop = phil->stats->phil_amount - 1;
-	printf("l = [%d] - r = [%d]\n", phil->l_chop, phil->r_chop);
+	if (phil->id % 2)
+	{
+		tmp = phil->l_chop;
+		phil->l_chop = phil->r_chop;
+		phil->r_chop = tmp;
+	}
+	// printf("l = [%d] - r = [%d]\n", phil->l_chop, phil->r_chop);
 }

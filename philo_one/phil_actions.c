@@ -10,7 +10,6 @@ void	state_sleep(t_phil *phil)
 		return ;
 	phil_msg(phil, "is sleeping");
 	usleep(phil->stats->time_to_sleep);
-	phil_msg(phil, "is thinking");
 }
 
 void	state_eat(t_phil *phil)

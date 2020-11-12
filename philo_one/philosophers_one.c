@@ -17,6 +17,7 @@ void	*do_things(void	*v_philosopher)
 			phil->stats->done++;
 			return (NULL);
 		}
+		phil_msg(phil, "is thinking");
 		if (phil->stats->dead == false)
 			take_chopstick(phil);
 		if (phil->stats->dead == false)
@@ -62,7 +63,14 @@ void	create_threads(t_phil *phil, t_stats stats)
 		phil_init(&(phil[i]), &stats, i);
 		pthread_mutex_init(&(stats.eatsies[i]), NULL);
 		if (pthread_create(&(threads[i]), NULL, do_things, &(phil[i]))) // oude threads weghalen
-			return ; //
+		{
+			while (i > 0)
+			{
+				i--;
+				pthread_join(threads[i], NULL);
+			}
+			return ;
+		}
 		i++;
 	}
 	monitor(phil);
