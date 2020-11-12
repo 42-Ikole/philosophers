@@ -55,14 +55,13 @@ void	create_threads(t_phil *phil, t_stats stats)
 
 	threads = malloc(sizeof(pthread_t) * stats.phil_amount);
 	if (!threads)
-		return ; //
+		return ;
 	i = 0;
 	while (i < stats.phil_amount)
 	{
-		//create threads here
 		phil_init(&(phil[i]), &stats, i);
 		pthread_mutex_init(&(stats.eatsies[i]), NULL);
-		if (pthread_create(&(threads[i]), NULL, do_things, &(phil[i]))) // oude threads weghalen
+		if (pthread_create(&(threads[i]), NULL, do_things, &(phil[i])))
 		{
 			while (i > 0)
 			{
@@ -78,9 +77,11 @@ void	create_threads(t_phil *phil, t_stats stats)
 	while (i < stats.phil_amount)
 	{
 		pthread_mutex_destroy(&phil->stats->chopsticks[i]);
+		pthread_mutex_destroy(&phil->stats->eatsies[i]);
 		pthread_join(threads[i], NULL);
 		i++;
 	}
+	pthread_mutex_destroy(&phil->stats->write);
 }
 
 
@@ -90,15 +91,15 @@ int 	main(int argc, char **argv)
     t_phil		*phil;
 
     if (!(argc == 5 || argc == 6))
-        return (1); //
+        return (1);
 	if(stat_init(&stats, argv, argc) == -1)
-		return (1); //
+		return (1);
 	stats.eatsies = malloc(sizeof(pthread_mutex_t) * stats.phil_amount);
 	if (!stats.eatsies)
 		return (1);
 	phil = malloc(sizeof(t_phil) * stats.phil_amount);
 	if (!phil)
-		return (1); //
+		return (1);
 	create_threads(phil, stats);
 	return (0);
 }

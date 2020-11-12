@@ -22,7 +22,7 @@ int		stat_init(t_stats *stats, char **str, int argc)
 	i = 0;
 	while (i < stats->phil_amount)
 	{
-		pthread_mutex_init(&(stats->chopsticks[i]), NULL); //check of hij faalt
+		pthread_mutex_init(&(stats->chopsticks[i]), NULL);
 		i++;
 	}
 	pthread_mutex_init(&(stats->write), NULL);
@@ -48,5 +48,4 @@ void	phil_init(t_phil *phil, t_stats *stats, int id)
 		phil->l_chop = phil->r_chop;
 		phil->r_chop = tmp;
 	}
-	// printf("l = [%d] - r = [%d]\n", phil->l_chop, phil->r_chop);
 }

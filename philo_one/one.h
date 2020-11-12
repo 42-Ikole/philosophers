@@ -2,7 +2,6 @@
 # define ONE_H
 
 # include <pthread.h>
-# include <stdio.h> //
 
 typedef enum	e_bool
 {

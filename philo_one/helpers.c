@@ -2,7 +2,6 @@
 #include "one.h"
 #include "unistd.h"
 #include <sys/time.h>
-#include <stdio.h>
 
 
 unsigned long get_time()
@@ -18,8 +17,8 @@ void		check_death(t_phil *phil)
 	unsigned long time;
 
 	time = get_time();
-	// printf("time = %d\n", time - phil->time_since_eaten >= phil->stats->time_to_die);
-	if (time - phil->time_since_eaten >= phil->stats->time_to_die && (phil->times_eaten <= 0 || phil->times_eaten < phil->stats->must_eat))
+	if (time - phil->time_since_eaten >= phil->stats->time_to_die &&
+		(phil->times_eaten <= 0 || phil->times_eaten < phil->stats->must_eat))
 	{
 		phil_msg(phil, "has died from starvation");
 		phil->stats->dead = true;
