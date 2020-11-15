@@ -1,51 +1,53 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   init.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: ikole <ikole@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
+/*   Updated: 2020/11/15 17:46:25 by ikole         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "one.h"
-#include <sys/time.h>
+#include "philo_one.h"
+#include <pthread.h>
 #include <stdlib.h>
 
-int		stat_init(t_stats *stats, char **str, int argc)
+int	data_init(char **arg, t_data *data)
 {
-	unsigned int i;
+	int	i;
 
-	stats->phil_amount = ft_atoi(str[1]);
-	stats->time_to_die = ft_atoi(str[2]);
-	stats->time_to_eat = ft_atoi(str[3]) * 1000;
-	stats->time_to_sleep = ft_atoi(str[4]) * 1000;
-	if (argc == 6)
-		stats->must_eat = ft_atoi(str[5]);
+	data->phil_amount = atoi(arg[1]);
+	data->ttdie = atoi(arg[2]) * 1000;
+	data->tteat = atoi(arg[3]) * 1000;
+	data->ttsleep = atoi(arg[4]) * 1000;
+	if (arg[5])
+		data->must_eat = atoi(arg[5]);
 	else
-		stats->must_eat = 0;
-	stats->done = 0;
-	stats->chopsticks = malloc(sizeof(pthread_mutex_t) * stats->phil_amount);
-	if (!stats->chopsticks)
-		return (-1);
+		data->must_eat = 0;
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->phil_amount);
+	if (!data->forks)
+		return (1);
 	i = 0;
-	while (i < stats->phil_amount)
+	while (i < data->phil_amount)
 	{
-		pthread_mutex_init(&(stats->chopsticks[i]), NULL);
+		if (pthread_mutex_init(&(data->forks[i]), NULL))
+			return (1);
 		i++;
 	}
-	pthread_mutex_init(&(stats->write), NULL);
-	stats->start = get_time();
+	if (pthread_mutex_init(&(data->write), NULL))
+		return (1);
 	return (0);
 }
 
-void	phil_init(t_phil *phil, t_stats *stats, int id)
+int	phil_init(t_phil *phil, int id, t_data *data)
 {
-	int	tmp;
-
-	phil->stats = stats;
 	phil->id = id;
-	phil->time_since_eaten = get_time();
 	phil->times_eaten = 0;
-	phil->l_chop = phil->id;
-	phil->r_chop = phil->id - 1;
-	if (phil->r_chop < 0)
-		phil->r_chop = phil->stats->phil_amount - 1;
-	if (phil->id % 2)
-	{
-		tmp = phil->l_chop;
-		phil->l_chop = phil->r_chop;
-		phil->r_chop = tmp;
-	}
+	phil->last_eaten = get_time();
+	if (pthread_mutex_init(&(phil->eat))
+		return (1);
+	phil->data = data;
+	return (0);
 }
