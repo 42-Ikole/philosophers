@@ -1,7 +1,8 @@
 
-#include "one.h"
+#include "two.h"
 #include <sys/time.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int		stat_init(t_stats *stats, char **str, int argc)
 {
@@ -15,25 +16,18 @@ int		stat_init(t_stats *stats, char **str, int argc)
 		stats->must_eat = 0;
 	stats->done = 0;
 	stats->start = get_time();
+	create_semaphores(stats);
 	return (0);
 }
 
 void	phil_init(t_phil *phil, t_stats *stats, int id)
 {
-	int	tmp;
-
 	phil->stats = stats;
 	phil->id = id;
 	phil->time_since_eaten = get_time();
 	phil->times_eaten = 0;
-	phil->l_chop = phil->id;
-	phil->r_chop = phil->id - 1;
-	if (phil->r_chop < 0)
-		phil->r_chop = phil->stats->phil_amount - 1;
-	if (phil->id % 2)
-	{
-		tmp = phil->l_chop;
-		phil->l_chop = phil->r_chop;
-		phil->r_chop = tmp;
-	}
+	if (id % 2)
+		usleep(400);
+	else
+		usleep(200);
 }

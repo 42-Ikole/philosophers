@@ -1,6 +1,6 @@
 
-#include "one.h"
-#include "unistd.h"
+#include "two.h"
+#include <unistd.h>
 #include <sys/time.h>
 
 
@@ -49,7 +49,7 @@ void	phil_msg(t_phil *phil, char *msg)
 {
 	unsigned long	kut;
 
-	pthread_mutex_lock(&(phil->stats->write));
+	sem_wait(phil->stats->write);
 	kut = get_time();
 	if (phil->stats->dead == false)
 	{
@@ -60,7 +60,7 @@ void	phil_msg(t_phil *phil, char *msg)
 		write(1, msg, ft_strlen(msg));
 		write(1, "\n", 1);
 	}
-	pthread_mutex_unlock(&(phil->stats->write));
+	sem_post(phil->stats->write);
 }
 
 int	ft_atoi(char *str)

@@ -2,6 +2,7 @@
 #include "two.h"
 #include <semaphore.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 void	*do_things(void	*v_philosopher)
 {
@@ -15,6 +16,7 @@ void	*do_things(void	*v_philosopher)
 		{
 			phil_msg(phil, "is done eating");
 			phil->stats->done++;
+			sem_close(phil->eatsies);
 			return (NULL);
 		}
 		phil_msg(phil, "is thinking");
@@ -23,6 +25,7 @@ void	*do_things(void	*v_philosopher)
 		if (phil->stats->dead == false)
 			state_sleep(phil);
 	}
+	sem_close(phil->eatsies);
 	return (NULL);
 }
 
@@ -39,9 +42,9 @@ void	monitor(t_phil *phil)
 			break ;
 		else if (phil->stats->must_eat >= 0 && phil->stats->done == phil->stats->phil_amount)
 			break ;
-		pthread_mutex_lock(&(phil->stats->eatsies[i]));
+		sem_wait(phil->eatsies);
 		check_death(&(phil[i]));
-		pthread_mutex_unlock(&(phil->stats->eatsies[i]));
+		sem_post(phil->eatsies);
 		i++;
 		if (i == phil->stats->phil_amount)
 			i = 0;
@@ -57,9 +60,16 @@ void	create_threads(t_phil *phil, t_stats stats)
 	if (!threads)
 		return ;
 	i = 0;
+	sem_unlink("eatsies");
 	while (i < stats.phil_amount)
 	{
 		phil_init(&(phil[i]), &stats, i);
+		phil->eatsies = sem_open("eatsies", O_CREAT, 0666, stats.phil_amount);
+		if (phil->eatsies == SEM_FAILED)
+		{
+			printf("nani?!?!?!\n");
+			return ;
+		}
 		if (pthread_create(&(threads[i]), NULL, do_things, &(phil[i])))
 		{
 			while (i > 0)
@@ -90,12 +100,11 @@ int 	main(int argc, char **argv)
         return (1);
 	if(stat_init(&stats, argv, argc) == -1)
 		return (1);
-	stats.eatsies = malloc(sizeof(sem_t) * stats.phil_amount);
-	if (!stats.eatsies)
-		return (1);
 	phil = malloc(sizeof(t_phil) * stats.phil_amount);
 	if (!phil)
 		return (1);
 	create_threads(phil, stats);
+	sem_close(stats.write);
+	sem_close(stats.chopsticks);
 	return (0);
 }

@@ -1,7 +1,8 @@
-#ifndef ONE_H
-# define ONE_H
+#ifndef TWO_H
+# define TWO_H
 
 # include <semaphore.h>
+# include <stdio.h> //
 
 typedef enum	e_bool
 {
@@ -20,7 +21,6 @@ typedef struct	s_stats
 	t_bool			dead;
 	sem_t			*chopsticks;
 	sem_t			*write;
-	sem_t			*eatsies;
 	unsigned long start;
 }				t_stats;
 
@@ -29,8 +29,7 @@ typedef struct	s_phil
 	unsigned int	id;
 	unsigned long	time_since_eaten;
 	unsigned int	times_eaten;
-	int				l_chop;
-	int				r_chop;
+	sem_t			*eatsies;
 	t_stats			*stats;
 }				t_phil;
 
@@ -44,5 +43,6 @@ int				stat_init(t_stats *stats, char **str, int argc);
 void			phil_init(t_phil *phil, t_stats *stats, int id);
 unsigned long	get_time();
 void			take_chopstick(t_phil *phil);
+void			create_semaphores(t_stats *stats);
 
 #endif

@@ -1,7 +1,7 @@
 
 NAME	= philo_two
 
-SRC		= helpers.c init.c phil_actions.c philosophers.c semaphore.c
+SRC		= helpers.c init.c phil_actions.c philosopher.c semaphore.c
 
 OFI		= $(SRC:.c=.o)
 
