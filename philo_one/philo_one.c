@@ -6,11 +6,13 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 12:04:29 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 14:09:13 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
+#include <unistd.h>
+#include <stdlib.h>
 
 static void	monitor(t_phil *phil)
 {
@@ -61,7 +63,7 @@ static void	create_threads(t_data *data)
 	{
 		if (phil_init(&(phil[i]), i, data))
 			return ; //
-		if (pthread_create(threads[i], NULL, phil_stuff, &(phil[i])))
+		if (pthread_create(&(threads[i]), NULL, (void*)phil_stuff, &(phil[i])))
 			return (join_threads(threads, i));
 		i++;
 	}
@@ -73,9 +75,9 @@ int main(int argc, char **argv)
 {
 	t_data	data;
 
-	if (argc != 5 || argc != 6)
+	if (!(argc == 5 || argc == 6))
 		return (1);
-	if (!data_init(argv, &data))
+	if (data_init(argv, &data))
 		return (1);
 	create_threads(&data);
     return (0);

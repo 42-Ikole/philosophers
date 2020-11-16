@@ -6,17 +6,18 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 12:07:28 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 14:14:45 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 #include <stdbool.h>
-#include <sys/time.h>
+#include <unistd.h>
 
 static void state_sleep(t_phil *phil)
 {
-
+	phil_msg(phil, "is sleeping");
+	usleep(phil->data->ttsleep);
 }
 
 static bool	take_forks(t_phil *phil, int l_fork, int r_fork)
@@ -48,6 +49,10 @@ static void	state_eat(t_phil *phil)
 	usleep(phil->data->tteat);
 	phil->times_eaten++;
 	pthread_mutex_unlock(&(phil->eat));
+	pthread_mutex_unlock(&(phil->data->forks[phil->r_fork]));
+	phil_msg(phil, "has dropped the fork on his right");
+	pthread_mutex_unlock(&(phil->data->forks[phil->l_fork]));
+	phil_msg(phil, "has dropped the fork on his left");
 }
 
 void		phil_stuff(void	*v_phil)
@@ -55,20 +60,22 @@ void		phil_stuff(void	*v_phil)
 	t_phil *phil;
 
 	phil = (t_phil*)v_phil;
-	while (phil->data->dead == true)
+	phil_msg(phil, "appeard for an epic feast");
+	while (phil->data->dead == false)
 	{
 		phil_msg(phil, "is thinking");
 		if (phil->data->dead == true)
-			return ;
+			break ;
 		state_eat(phil);
 		if (phil->data->dead == true)
-			return ;
+			break ;
 		if (phil->times_eaten > 0 && phil->times_eaten == phil->data->must_eat)
 		{
 			phil_msg(phil, "is done eating");
 			phil->data->done_eating++;
-			return ;
+			break ;
 		}
 		state_sleep(phil);
 	}
+	printf("wazap\n");
 }

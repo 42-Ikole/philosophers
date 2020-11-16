@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 11:54:11 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 14:04:00 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 
 int	data_init(char **arg, t_data *data)
 {
-	int	i;
+	unsigned int	i;
 
 	data->phil_amount = atoi(arg[1]);
-	data->ttdie = atoi(arg[2]) * 1000;
+	data->ttdie = atoi(arg[2]);
 	data->tteat = atoi(arg[3]) * 1000;
 	data->ttsleep = atoi(arg[4]) * 1000;
 	data->start_time = get_time();

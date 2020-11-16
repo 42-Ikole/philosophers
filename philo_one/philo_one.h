@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 11:51:06 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 13:58:01 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <pthread.h>
 # include <stdbool.h>
+# include <stdio.h>
 
 typedef struct  s_data
 {
@@ -34,7 +35,7 @@ typedef struct	s_phil
 {
 	unsigned int	id;
 	unsigned int	times_eaten;
-	unsigned int	last_eaten;
+	unsigned long	last_eaten;
 	unsigned int	l_fork;
 	unsigned int	r_fork;
 	pthread_mutex_t	eat;
