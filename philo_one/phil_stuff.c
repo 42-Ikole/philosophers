@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 14:14:45 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 17:35:12 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ static void	state_eat(t_phil *phil)
 		return ;
 	pthread_mutex_lock(&(phil->eat));
 	phil_msg(phil, "is eating");
-	usleep(phil->data->tteat);
+	phil->last_eaten = get_time();
 	phil->times_eaten++;
 	pthread_mutex_unlock(&(phil->eat));
+	usleep(phil->data->tteat);
 	pthread_mutex_unlock(&(phil->data->forks[phil->r_fork]));
 	phil_msg(phil, "has dropped the fork on his right");
 	pthread_mutex_unlock(&(phil->data->forks[phil->l_fork]));
@@ -61,7 +62,7 @@ void		phil_stuff(void	*v_phil)
 
 	phil = (t_phil*)v_phil;
 	phil_msg(phil, "appeard for an epic feast");
-	while (phil->data->dead == false)
+	while (1)
 	{
 		phil_msg(phil, "is thinking");
 		if (phil->data->dead == true)
@@ -77,5 +78,4 @@ void		phil_stuff(void	*v_phil)
 		}
 		state_sleep(phil);
 	}
-	printf("wazap\n");
 }

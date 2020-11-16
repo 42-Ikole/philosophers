@@ -6,13 +6,29 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 14:09:13 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 17:33:44 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 #include <unistd.h>
 #include <stdlib.h>
+
+static void	ft_destruction(t_phil *phil, t_data *data, pthread_t *threads)
+{
+	unsigned int i;
+
+	pthread_mutex_destroy(&(data->write));
+	i = 0;
+	while (i < data->phil_amount)
+	{
+		pthread_mutex_destroy(&(phil[i].eat));
+		pthread_mutex_destroy(&(data->forks[i]));
+		i++;
+	}
+	free(threads);
+	free(data->forks);
+}
 
 static void	monitor(t_phil *phil)
 {
@@ -23,14 +39,17 @@ static void	monitor(t_phil *phil)
 	while (i < phil->data->phil_amount)
 	{
 		time = get_time();
-		pthread_mutex_lock(&(phil[i].eat));
+		// pthread_mutex_lock(&phil->data->write);
+		// printf("%lu - %lu - %lu - %d\n", time, phil[i].last_eaten, time - phil[i].last_eaten, i);
+		// pthread_mutex_unlock(&phil->data->write);
 		if (time - phil[i].last_eaten >= phil->data->ttdie)
 		{
+			pthread_mutex_lock(&(phil[i].eat));
 			phil_msg(&(phil[i]), "died");
 			phil->data->dead = true;
+			pthread_mutex_unlock(&(phil[i].eat));
 			break ;
 		}
-		pthread_mutex_unlock(&(phil[i].eat));
 		if (phil->data->done_eating == phil->data->phil_amount)
 			break ;
 		i++;
@@ -69,6 +88,7 @@ static void	create_threads(t_data *data)
 	}
 	monitor(phil);
 	join_threads(threads, data->phil_amount);
+	ft_destruction(phil, data, threads);
 }
 
 int main(int argc, char **argv)
