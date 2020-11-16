@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/15 17:46:18 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 11:51:06 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PHILO_ONE_H
 
 # include <pthread.h>
+# include <stdbool.h>
 
 typedef struct  s_data
 {
@@ -22,6 +23,9 @@ typedef struct  s_data
 	unsigned int	tteat;
 	unsigned int	ttsleep;
 	unsigned int	must_eat;
+	unsigned int	done_eating;
+	unsigned long	start_time;
+	bool			dead;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
 }               t_data;
@@ -31,14 +35,25 @@ typedef struct	s_phil
 	unsigned int	id;
 	unsigned int	times_eaten;
 	unsigned int	last_eaten;
+	unsigned int	l_fork;
+	unsigned int	r_fork;
 	pthread_mutex_t	eat;
 	t_data			*data;
 }				t_phil;
 
+void			phil_stuff(void *);
+
+/*
+**	Init
+*/
 int				data_init(char **, t_data *);
-int				ft_atoi(char *);
-void			phil_stuff(t_phil *);
 int				phil_init(t_phil *, int, t_data *);
+
+/*
+**	Helpers
+*/
 unsigned long	get_time();
+void			phil_msg(t_phil *, char *);
+int				ft_atoi(char *);
 
 #endif

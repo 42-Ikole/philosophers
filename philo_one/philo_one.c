@@ -6,11 +6,36 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/15 17:47:11 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 12:04:29 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
+
+static void	monitor(t_phil *phil)
+{
+	unsigned int	i;
+	unsigned long	time;
+
+	i = 0;
+	while (i < phil->data->phil_amount)
+	{
+		time = get_time();
+		pthread_mutex_lock(&(phil[i].eat));
+		if (time - phil[i].last_eaten >= phil->data->ttdie)
+		{
+			phil_msg(&(phil[i]), "died");
+			phil->data->dead = true;
+			break ;
+		}
+		pthread_mutex_unlock(&(phil[i].eat));
+		if (phil->data->done_eating == phil->data->phil_amount)
+			break ;
+		i++;
+		if (i == phil->data->phil_amount)
+			i = 0;
+	}
+}
 
 static void join_threads(pthread_t *threads, int i)
 {
