@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 17:24:43 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 17:49:27 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	ft_putnbr(unsigned long n)
 {
 	char print[1];
 
-	if (n > 10)
+	if (n >= 10)
 		ft_putnbr(n / 10);
 	*print = n % 10 + 48;
 	write(1, print, 1);

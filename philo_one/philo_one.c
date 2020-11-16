@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 17:33:44 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 18:06:38 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,15 @@ static void	monitor(t_phil *phil)
 	while (i < phil->data->phil_amount)
 	{
 		time = get_time();
-		// pthread_mutex_lock(&phil->data->write);
-		// printf("%lu - %lu - %lu - %d\n", time, phil[i].last_eaten, time - phil[i].last_eaten, i);
-		// pthread_mutex_unlock(&phil->data->write);
+		pthread_mutex_lock(&(phil[i].eat));
 		if (time - phil[i].last_eaten >= phil->data->ttdie)
 		{
-			pthread_mutex_lock(&(phil[i].eat));
 			phil_msg(&(phil[i]), "died");
 			phil->data->dead = true;
 			pthread_mutex_unlock(&(phil[i].eat));
 			break ;
 		}
+		pthread_mutex_unlock(&(phil[i].eat));
 		if (phil->data->done_eating == phil->data->phil_amount)
 			break ;
 		i++;

@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 14:04:00 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/16 18:11:37 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	data_init(char **arg, t_data *data)
 
 int	phil_init(t_phil *phil, int id, t_data *data)
 {
-	unsigned int	tmp;
+	// unsigned int	tmp;
 
 	phil->id = id;
 	phil->times_eaten = 0;
@@ -63,5 +63,6 @@ int	phil_init(t_phil *phil, int id, t_data *data)
 		phil->l_fork = phil->r_fork;
 		phil->r_fork = tmp;
 	}
+	printf("l[%d]-r[%d]\n", phil->l_fork, phil->r_fork);
 	return (0);
 }
