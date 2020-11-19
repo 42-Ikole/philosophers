@@ -38,12 +38,12 @@ static void	monitor(t_phil *phil)
 	i = 0;
 	while (i < phil->data->phil_amount)
 	{
-		time = get_time();
 		pthread_mutex_lock(&(phil[i].eat));
+		time = get_time();
 		if (time - phil[i].last_eaten >= phil->data->ttdie)
 		{
-			phil_msg(&(phil[i]), "died");
 			phil->data->dead = true;
+			phil_msg(&(phil[i]), "died", true);
 			pthread_mutex_unlock(&(phil[i].eat));
 			break ;
 		}
@@ -52,7 +52,10 @@ static void	monitor(t_phil *phil)
 			break ;
 		i++;
 		if (i == phil->data->phil_amount)
+		{
 			i = 0;
+			usleep(200);
+		}
 	}
 }
 

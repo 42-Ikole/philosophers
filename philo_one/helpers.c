@@ -15,6 +15,15 @@
 #include <pthread.h>
 #include <unistd.h>
 
+void			zzz(unsigned long to_sleep)
+{
+	unsigned long start;
+
+	start = get_time();
+	while (get_time() - start < to_sleep)
+		usleep(100);
+}
+
 unsigned long	get_time()
 {
 	struct timeval current_time;
@@ -43,12 +52,12 @@ static int		ft_strlen(char *str)
 	return (i);
 }
 
-void			phil_msg(t_phil *phil, char *msg)
+void			phil_msg(t_phil *phil, char *msg, bool force_write)
 {
 	unsigned long	time;
 
 	pthread_mutex_lock(&(phil->data->write));
-	if (phil->data->dead == false)
+	if (phil->data->dead == false || force_write == true)
 	{
 		time = get_time();
 		ft_putnbr(time - phil->data->start_time);

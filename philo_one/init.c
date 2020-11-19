@@ -20,8 +20,8 @@ int	data_init(char **arg, t_data *data)
 
 	data->phil_amount = atoi(arg[1]);
 	data->ttdie = atoi(arg[2]);
-	data->tteat = atoi(arg[3]) * 1000;
-	data->ttsleep = atoi(arg[4]) * 1000;
+	data->tteat = atoi(arg[3]);
+	data->ttsleep = atoi(arg[4]);
 	data->start_time = get_time();
 	data->dead = false;
 	if (arg[5])
@@ -45,7 +45,7 @@ int	data_init(char **arg, t_data *data)
 
 int	phil_init(t_phil *phil, int id, t_data *data)
 {
-	// unsigned int	tmp;
+	unsigned int	tmp;
 
 	phil->id = id;
 	phil->times_eaten = 0;
@@ -63,6 +63,6 @@ int	phil_init(t_phil *phil, int id, t_data *data)
 		phil->l_fork = phil->r_fork;
 		phil->r_fork = tmp;
 	}
-	printf("l[%d]-r[%d]\n", phil->l_fork, phil->r_fork);
+	// printf("l[%d]-r[%d]\n", phil->l_fork, phil->r_fork);
 	return (0);
 }

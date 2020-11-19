@@ -20,7 +20,7 @@
 typedef struct  s_data
 {
     unsigned int	phil_amount;
-	unsigned int	ttdie;
+	unsigned long	ttdie;
 	unsigned int	tteat;
 	unsigned int	ttsleep;
 	unsigned int	must_eat;
@@ -54,7 +54,8 @@ int				phil_init(t_phil *, int, t_data *);
 **	Helpers
 */
 unsigned long	get_time();
-void			phil_msg(t_phil *, char *);
+void			phil_msg(t_phil *, char *, bool);
 int				ft_atoi(char *);
+void			zzz(unsigned long);
 
 #endif

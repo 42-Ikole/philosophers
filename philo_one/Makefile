@@ -14,8 +14,6 @@ NAME	= philo_one
 
 SRC		= philo_one.c init.c helpers.c phil_stuff.c
 
-OFI		= $(SRC:.c=.o)
-
 FLAGS	= -Wall -Wextra -Werror -pthread
 
 all: $(SRC)
@@ -24,7 +22,6 @@ all: $(SRC)
 re: fclean all
 
 clean:
-	@ rm $(OFI)
 
 fclean:
 	@ rm -rf $(NAME)
