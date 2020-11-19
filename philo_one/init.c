@@ -11,23 +11,15 @@
 /* ************************************************************************** */
 
 #include "philo_one.h"
+#include "colors.h"
 #include <pthread.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-int	data_init(char **arg, t_data *data)
+static int init_mutex(t_data *data)
 {
 	unsigned int	i;
 
-	data->phil_amount = atoi(arg[1]);
-	data->ttdie = atoi(arg[2]);
-	data->tteat = atoi(arg[3]);
-	data->ttsleep = atoi(arg[4]);
-	data->start_time = get_time();
-	data->dead = false;
-	if (arg[5])
-		data->must_eat = atoi(arg[5]);
-	else
-		data->must_eat = 0;
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->phil_amount);
 	if (!data->forks)
 		return (1);
@@ -43,6 +35,46 @@ int	data_init(char **arg, t_data *data)
 	return (0);
 }
 
+static int init_colors(t_data *data)
+{
+	data->colors = malloc(sizeof(char *) * 8);
+	if (!data->colors)
+		return (1);
+	data->colors[0] = COLOR_RED;
+	data->colors[1] = COLOR_GREEN;
+	data->colors[2] = COLOR_BLUE;
+	data->colors[3] = COLOR_BLU;
+	data->colors[4] = COLOR_ORANGE;
+	data->colors[5] = COLOR_PURPLE;
+	data->colors[6] = COLOR_YELLOW;
+	data->colors[7] = COLOR_PINK;
+	return (0);
+}
+
+int	data_init(char **arg, t_data *data)
+{
+	data->phil_amount = atoi(arg[1]);
+	if (data->phil_amount < 2)
+	{
+		write(2, "cmon man, we need atleast 2 philosophers?\n", 31);
+		return (1);
+	}
+	if (init_colors(data))
+		return (1);
+	data->ttdie = atoi(arg[2]);
+	data->tteat = atoi(arg[3]);
+	data->ttsleep = atoi(arg[4]);
+	data->start_time = get_time();
+	data->dead = false;
+	if (arg[5])
+		data->must_eat = atoi(arg[5]);
+	else
+		data->must_eat = 0;
+	if (init_mutex(data) == 1)
+		return (1);
+	return (0);
+}
+
 int	phil_init(t_phil *phil, int id, t_data *data)
 {
 	unsigned int	tmp;
@@ -52,6 +84,7 @@ int	phil_init(t_phil *phil, int id, t_data *data)
 	phil->last_eaten = get_time();
 	if (pthread_mutex_init(&(phil->eat), NULL))
 		return (1);
+	phil->done = false;
 	phil->data = data;
 	phil->l_fork = id + 1;
 	phil->r_fork = id;
@@ -63,6 +96,5 @@ int	phil_init(t_phil *phil, int id, t_data *data)
 		phil->l_fork = phil->r_fork;
 		phil->r_fork = tmp;
 	}
-	// printf("l[%d]-r[%d]\n", phil->l_fork, phil->r_fork);
 	return (0);
 }

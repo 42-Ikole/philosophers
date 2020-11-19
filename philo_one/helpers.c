@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo_one.h"
+#include "colors.h"
 #include <sys/time.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -61,9 +62,13 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 	{
 		time = get_time();
 		ft_putnbr(time - phil->data->start_time);
+		write (1, phil->data->colors[phil->id % 8], ft_strlen(phil->data->colors[phil->id % 8]));
 		write(1, " [", 2);
 		ft_putnbr(phil->id);
 		write(1, "] ", 2);
+		write (1, COLOR_RESET, 5);
+		if (force_write == true)
+			write(1, COLOR_RED, ft_strlen(COLOR_RED));
 		write(1, msg, ft_strlen(msg));
 		write(1, "\n", 1);
 	}

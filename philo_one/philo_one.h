@@ -15,11 +15,12 @@
 
 # include <pthread.h>
 # include <stdbool.h>
-# include <stdio.h>
+# include <stdio.h> //
 
 typedef struct  s_data
 {
     unsigned int	phil_amount;
+	char			**colors;
 	unsigned long	ttdie;
 	unsigned int	tteat;
 	unsigned int	ttsleep;
@@ -38,6 +39,7 @@ typedef struct	s_phil
 	unsigned long	last_eaten;
 	unsigned int	l_fork;
 	unsigned int	r_fork;
+	bool			done;
 	pthread_mutex_t	eat;
 	t_data			*data;
 }				t_phil;

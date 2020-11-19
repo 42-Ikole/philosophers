@@ -74,6 +74,7 @@ void		phil_stuff(void	*v_phil)
 		{
 			phil_msg(phil, "is done eating", false);
 			phil->data->done_eating++;
+			phil->done = true;
 			break ;
 		}
 		state_sleep(phil);

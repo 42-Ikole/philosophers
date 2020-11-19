@@ -40,7 +40,7 @@ static void	monitor(t_phil *phil)
 	{
 		pthread_mutex_lock(&(phil[i].eat));
 		time = get_time();
-		if (time - phil[i].last_eaten >= phil->data->ttdie)
+		if (time - phil[i].last_eaten >= phil->data->ttdie && phil[i].done == false)
 		{
 			phil->data->dead = true;
 			phil_msg(&(phil[i]), "died", true);
