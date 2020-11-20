@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/20 17:25:19 by ingmar        ########   odam.nl         */
+/*   Updated: 2020/11/20 17:38:01 by ingmar        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 		time = get_time();
 		ft_putnbr(time - phil->data->start_time);
 		write (1, phil->data->colors[phil->id % 8], ft_strlen(phil->data->colors[phil->id % 8]));
-		write(1, " [", 2);
+		write(1, "\t[", 2);
 		ft_putnbr(phil->id);
 		write(1, msg, ft_strlen(msg));
 	}
