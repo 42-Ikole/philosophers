@@ -1,9 +1,18 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         ::::::::             #
+#    Makefile                                           :+:    :+:             #
+#                                                      +:+                     #
+#    By: ikole <ikole@student.codam.nl>               +#+                      #
+#                                                    +#+                       #
+#    Created: 2020/11/15 16:36:12 by ikole         #+#    #+#                  #
+#    Updated: 2020/11/15 17:40:41 by ikole         ########   odam.nl          #
+#                                                                              #
+# **************************************************************************** #
 
 NAME	= philo_two
 
-SRC		= helpers.c init.c phil_actions.c philosopher.c semaphore.c
-
-OFI		= $(SRC:.c=.o)
+SRC		= philo_two.c init.c helpers.c phil_stuff.c
 
 FLAGS	= -Wall -Wextra -Werror -pthread
 
@@ -13,7 +22,6 @@ all: $(SRC)
 re: fclean all
 
 clean:
-	@ rm $(OFI)
 
 fclean:
 	@ rm -rf $(NAME)

@@ -6,28 +6,29 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/20 17:23:19 by ingmar        ########   odam.nl         */
+/*   Updated: 2020/11/16 18:06:38 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <semaphore.h>
+#include <pthread.h>
 
 static void	ft_destruction(t_phil *phil, t_data *data, pthread_t *threads)
 {
 	unsigned int i;
 
-	pthread_mutex_destroy(&(data->write));
+	sem_close(data->write);
 	i = 0;
 	while (i < data->phil_amount)
 	{
-		pthread_mutex_destroy(&(phil[i].eat));
-		pthread_mutex_destroy(&(data->forks[i]));
+		sem_close(phil[i].eat);
+		sem_close(data->forks);
 		i++;
 	}
 	free(threads);
-	free(data->forks);
 	free(data->colors);
 }
 
@@ -39,16 +40,16 @@ static void	monitor(t_phil *phil)
 	i = 0;
 	while (i < phil->data->phil_amount)
 	{
-		pthread_mutex_lock(&(phil[i].eat));
+		sem_wait(phil[i].eat);
 		time = get_time();
 		if (time - phil[i].last_eaten >= phil->data->ttdie && phil[i].done == false)
 		{
 			phil->data->dead = true;
 			phil_msg(&(phil[i]), MSG_DIED, true);
-			pthread_mutex_unlock(&(phil[i].eat));
+			sem_post(phil[i].eat);
 			break ;
 		}
-		pthread_mutex_unlock(&(phil[i].eat));
+		sem_post(phil[i].eat);
 		if (phil->data->done_eating == phil->data->phil_amount)
 			break ;
 		i++;

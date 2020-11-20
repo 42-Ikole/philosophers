@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 17:49:27 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/20 17:25:19 by ingmar        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,7 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 		write (1, phil->data->colors[phil->id % 8], ft_strlen(phil->data->colors[phil->id % 8]));
 		write(1, " [", 2);
 		ft_putnbr(phil->id);
-		write(1, "] ", 2);
-		write (1, COLOR_RESET, 5);
-		if (force_write == true)
-			write(1, COLOR_RED, ft_strlen(COLOR_RED));
 		write(1, msg, ft_strlen(msg));
-		write(1, "\n", 1);
 	}
 	pthread_mutex_unlock(&(phil->data->write));
 }

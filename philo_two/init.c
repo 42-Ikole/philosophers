@@ -1,33 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   init.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: ikole <ikole@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
+/*   Updated: 2020/11/16 18:11:37 by ikole         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "two.h"
-#include <sys/time.h>
+#include "philo_two.h"
+#include "colors.h"
+#include <semaphore.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-int		stat_init(t_stats *stats, char **str, int argc)
+static int init_mutex(t_data *data)
 {
-	stats->phil_amount = ft_atoi(str[1]);
-	stats->time_to_die = ft_atoi(str[2]);
-	stats->time_to_eat = ft_atoi(str[3]) * 1000;
-	stats->time_to_sleep = ft_atoi(str[4]) * 1000;
-	if (argc == 6)
-		stats->must_eat = ft_atoi(str[5]);
-	else
-		stats->must_eat = 0;
-	stats->done = 0;
-	stats->start = get_time();
-	create_semaphores(stats);
+	data->forks = sem_open("phil_forks", O_CREAT | O_EXCL, 0644, data->phil_amount);
+	if (data->forks == SEM_FAILED)
+		return (1);
+	sem_unlink("phil_forks");
+	data->write = sem_open("phil_write", O_CREAT | O_EXCL, 0644, 1);
+	if (data->write == SEM_FAILED)
+		return (1);
+	sem_unlink("phil_write");
 	return (0);
 }
 
-void	phil_init(t_phil *phil, t_stats *stats, int id)
+static int init_colors(t_data *data)
 {
-	phil->stats = stats;
-	phil->id = id;
-	phil->time_since_eaten = get_time();
-	phil->times_eaten = 0;
-	if (id % 2)
-		usleep(400);
+	data->colors = malloc(sizeof(char *) * 8);
+	if (!data->colors)
+		return (1);
+	data->colors[0] = COLOR_RED;
+	data->colors[1] = COLOR_GREEN;
+	data->colors[2] = COLOR_BLUE;
+	data->colors[3] = COLOR_BLU;
+	data->colors[4] = COLOR_ORANGE;
+	data->colors[5] = COLOR_PURPLE;
+	data->colors[6] = COLOR_YELLOW;
+	data->colors[7] = COLOR_PINK;
+	return (0);
+}
+
+int	data_init(char **arg, t_data *data)
+{
+	data->phil_amount = atoi(arg[1]);
+	if (data->phil_amount < 2)
+	{
+		write(2, "cmon man, we need atleast 2 philosophers?\n", 31);
+		return (1);
+	}
+	if (init_colors(data))
+		return (1);
+	data->ttdie = atoi(arg[2]);
+	data->tteat = atoi(arg[3]);
+	data->ttsleep = atoi(arg[4]);
+	data->start_time = get_time();
+	data->dead = false;
+	if (arg[5])
+		data->must_eat = atoi(arg[5]);
 	else
-		usleep(200);
+		data->must_eat = 0;
+	if (init_mutex(data) == 1)
+		return (1);
+	return (0);
+}
+
+int	phil_init(t_phil *phil, int id, t_data *data)
+{
+	phil->id = id;
+	phil->times_eaten = 0;
+	phil->last_eaten = get_time();
+	phil->eat = sem_open("phil_eat", O_CREAT, 0644, 1);
+	if (phil->eat == SEM_FAILED)
+		return (1);
+	sem_unlink("phil_eat");
+	phil->done = false;
+	phil->data = data;
+	return (0);
 }

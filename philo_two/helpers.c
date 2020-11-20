@@ -1,10 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   helpers.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: ikole <ikole@student.codam.nl>               +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
+/*   Updated: 2020/11/16 17:49:27 by ikole         ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "two.h"
-#include <unistd.h>
+#include "philo_two.h"
+#include "colors.h"
 #include <sys/time.h>
+#include <semaphore.h>
+#include <unistd.h>
 
+void			zzz(unsigned long to_sleep)
+{
+	unsigned long start;
 
-unsigned long get_time()
+	start = get_time();
+	while (get_time() - start < to_sleep)
+		usleep(100);
+}
+
+unsigned long	get_time()
 {
 	struct timeval current_time;
 
@@ -12,20 +33,17 @@ unsigned long get_time()
 	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
 }
 
-void		check_death(t_phil *phil)
+static void	ft_putnbr(unsigned long n)
 {
-	unsigned long time;
+	char print[1];
 
-	time = get_time();
-	if (time - phil->time_since_eaten >= phil->stats->time_to_die &&
-		(phil->times_eaten <= 0 || phil->times_eaten < phil->stats->must_eat))
-	{
-		phil_msg(phil, "has died from starvation");
-		phil->stats->dead = true;
-	}
+	if (n >= 10)
+		ft_putnbr(n / 10);
+	*print = n % 10 + 48;
+	write(1, print, 1);
 }
 
-static int	ft_strlen(char *str)
+static int		ft_strlen(char *str)
 {
 	int i;
 
@@ -35,51 +53,42 @@ static int	ft_strlen(char *str)
 	return (i);
 }
 
-static void	ft_putnbr(unsigned long n)
+void			phil_msg(t_phil *phil, char *msg, bool force_write)
 {
-	char print[1];
+	unsigned long	time;
 
-	if (n > 10)
-		ft_putnbr(n / 10);
-	*print = n % 10 + 48;
-	write(1, print, 1);
-}
-
-void	phil_msg(t_phil *phil, char *msg)
-{
-	unsigned long	kut;
-
-	sem_wait(phil->stats->write);
-	kut = get_time();
-	if (phil->stats->dead == false)
+	sem_wait(phil->data->write);
+	if (phil->data->dead == false || force_write == true)
 	{
-		ft_putnbr(kut - phil->stats->start);
+		time = get_time();
+		ft_putnbr(time - phil->data->start_time);
+		write (1, phil->data->colors[phil->id % 8], ft_strlen(phil->data->colors[phil->id % 8]));
 		write(1, " [", 2);
 		ft_putnbr(phil->id);
-		write(1, "] ", 2);
 		write(1, msg, ft_strlen(msg));
-		write(1, "\n", 1);
 	}
-	sem_post(phil->stats->write);
+	sem_post(phil->data->write);
 }
 
-int	ft_atoi(char *str)
+int				ft_atoi(char *str)
 {
-	long res;
-	long sgn;
+	int	nb;
+	int	sgn;
+	int i;
 
-	res = 0;
+	nb = 0;
 	sgn = 1;
-	while (*str == 32 || (*str >= 9 && *str <= 13))
-		str++;
-	if (*str == 45)
+	i = 0;
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
+		i++;
+	if (str[i] == '+')
+		i++;
+	if (str[i] == '-')
 		sgn = -1;
-	if (*str == 43 || *str == 45)
-		str++;
-	while (*str >= 48 && *str <= 57)
+	while (str[i])
 	{
-		res = res * 10 + *str - '0';
-		str++;
+		nb = nb * 10 + str[i] - '0';
+		i++;
 	}
-	return ((int)(res * sgn));
+	return (nb * sgn);
 }

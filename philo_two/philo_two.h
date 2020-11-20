@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ONE_H
-# define PHILO_ONE_H
+#ifndef PHILO_TWO_H
+# define PHILO_TWO_H
 
 # include "colors.h"
-# include <pthread.h>
+# include <semaphore.h>
 # include <stdbool.h>
 # include <stdio.h> //
 
@@ -38,8 +38,8 @@ typedef struct  s_data
 	unsigned int	done_eating;
 	unsigned long	start_time;
 	bool			dead;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	write;
+	sem_t			*forks;
+	sem_t			*write;
 }               t_data;
 
 typedef struct	s_phil
@@ -47,10 +47,8 @@ typedef struct	s_phil
 	unsigned int	id;
 	unsigned int	times_eaten;
 	unsigned long	last_eaten;
-	unsigned int	l_fork;
-	unsigned int	r_fork;
 	bool			done;
-	pthread_mutex_t	eat;
+	sem_t			*eat;
 	t_data			*data;
 }				t_phil;
 

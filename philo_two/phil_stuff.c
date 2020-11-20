@@ -6,13 +6,14 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/20 17:24:31 by ingmar        ########   odam.nl         */
+/*   Updated: 2020/11/16 17:35:12 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 #include <stdbool.h>
 #include <unistd.h>
+#include <semaphore.h>
 
 static void state_sleep(t_phil *phil)
 {
@@ -20,20 +21,20 @@ static void state_sleep(t_phil *phil)
 	zzz(phil->data->ttsleep);
 }
 
-static bool	take_forks(t_phil *phil, int l_fork, int r_fork)
+static bool	take_forks(t_phil *phil)
 {
-	pthread_mutex_lock(&(phil->data->forks[r_fork]));
+	sem_wait(phil->data->forks);
 	if (phil->data->dead == true)
 	{
-		pthread_mutex_unlock(&(phil->data->forks[r_fork]));
+		sem_post(phil->data->forks);
 		return (false);
 	}
 	phil_msg(phil, MSG_PICK_FORK, false);
-	pthread_mutex_lock(&(phil->data->forks[l_fork]));
+	sem_wait(phil->data->forks);
 	if (phil->data->dead == true)
 	{
-		pthread_mutex_unlock(&(phil->data->forks[r_fork]));
-		pthread_mutex_unlock(&(phil->data->forks[l_fork]));
+		sem_post(phil->data->forks);
+		sem_post(phil->data->forks);
 		return (false);
 	}
 	phil_msg(phil, MSG_PICK_FORK, false);
@@ -42,17 +43,17 @@ static bool	take_forks(t_phil *phil, int l_fork, int r_fork)
 
 static void	state_eat(t_phil *phil)
 {
-	if (take_forks(phil, phil->l_fork, phil->r_fork) == false)
+	if (take_forks(phil) == false)
 		return ;
-	pthread_mutex_lock(&(phil->eat));
+	sem_wait(phil->eat);
 	phil_msg(phil, MSG_EATING, false);
 	phil->times_eaten++;
 	phil->last_eaten = get_time();
-	pthread_mutex_unlock(&(phil->eat));
+	sem_post(phil->eat);
 	zzz(phil->data->tteat);
-	pthread_mutex_unlock(&(phil->data->forks[phil->r_fork]));
+	sem_post(phil->data->forks);
 	phil_msg(phil, MSG_DROP_FORK, false);
-	pthread_mutex_unlock(&(phil->data->forks[phil->l_fork]));
+	sem_post(phil->data->forks);
 	phil_msg(phil, MSG_DROP_FORK, false);
 }
 
@@ -61,6 +62,7 @@ void		phil_stuff(void	*v_phil)
 	t_phil *phil;
 
 	phil = (t_phil*)v_phil;
+	usleep(phil->id % 2 * 100);
 	phil_msg(phil, MSG_APPEAR, false);
 	while (1)
 	{
