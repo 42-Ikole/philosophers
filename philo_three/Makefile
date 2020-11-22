@@ -6,7 +6,7 @@
 #    By: ikole <ikole@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/11/15 16:36:12 by ikole         #+#    #+#                  #
-#    Updated: 2020/11/22 16:13:15 by ikole         ########   odam.nl          #
+#    Updated: 2020/11/22 19:18:53 by ikole         ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	= philo_three
 
 SRC		= philo_three.c init.c helpers.c phil_stuff.c
 
-FLAGS	= -Wall -Wextra -Werror -pthread
+FLAGS	= -Wall -Wextra -Werror -pthread -fsanitize=address
 
 all: $(SRC)
 	gcc $(FLAGS) $(SRC) -o $(NAME)

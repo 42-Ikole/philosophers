@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 16:13:48 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 19:45:43 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 	unsigned long	time;
 
 	sem_wait(phil->data->write);
-	if (check_death(phil->data) == false|| force_write == true)
+	if (check_death(phil->data) == false && force_write == true)
 	{
 		time = get_time();
 		ft_putnbr(time - phil->data->start_time);

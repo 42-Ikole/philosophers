@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 16:23:19 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 19:58:06 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static void	create_threads(t_data *data)
 	pid_t			*pid;
 	t_phil			*phil;
 	unsigned int	i;
+	int				status;
 	
 	pid = malloc(sizeof(pid_t) * data->phil_amount);
 	phil = malloc(sizeof(t_phil) * data->phil_amount);
@@ -58,15 +59,26 @@ static void	create_threads(t_data *data)
 	{
 		if (phil_init(&(phil[i]), i, data))
 			return (guillotine(pid, i));
+		printf("[%i] - before = [%lu]\n", i, get_time() - data->start_time);
 		pid[i] = fork();
-		if (pid[i] < 0)
-			return (guillotine(pid, i));
-		else if (pid[i] == 0)
+		printf("[%i] - eftoer = [%lu]\n", i, get_time() - data->start_time);
+		// if (pid[i] < 0)÷
+		if (pid[i] == 0)
 			phil_stuff(&phil[i]);
+		usleep(100);
 		i++;
 	}
-	waitpid(-1, NULL, 0);
-	guillotine(pid, data->phil_amount);
+	i = 0;
+	while (i < data->phil_amount)
+	{
+		waitpid(-1, &status, WUNTRACED);
+		if (status == 1)
+		{
+			guillotine(pid, data->phil_amount);
+			break ;
+		}
+		i++;
+	}
 	ft_destruction(phil, data, pid);
 }
 

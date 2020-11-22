@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 16:15:02 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 19:33:41 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,18 +96,17 @@ void		phil_stuff(void	*v_phil)
 	{
 		phil_msg(phil, MSG_THINKING, false);
 		if (check_death(phil->data) == true)
-			break ;
+			exit(1);
 		state_eat(phil);
 		if (check_death(phil->data) == true)
-			break ;
+			exit(1);
 		if (phil->times_eaten > 0 && phil->times_eaten == phil->data->must_eat)
 		{
 			phil_msg(phil, MSG_DONE, false);
 			phil->data->done_eating++;
 			phil->done = true;
-			break ;
+			exit(0);
 		}
 		state_sleep(phil);
 	}
-	exit(0);
 }
