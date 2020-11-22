@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 18:11:37 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 12:27:35 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static int init_mutex(t_data *data)
 		i++;
 	}
 	if (pthread_mutex_init(&(data->write), NULL))
+		return (1);
+	if (pthread_mutex_init(&(data->frick), NULL))
 		return (1);
 	return (0);
 }
@@ -77,8 +79,6 @@ int	data_init(char **arg, t_data *data)
 
 int	phil_init(t_phil *phil, int id, t_data *data)
 {
-	unsigned int	tmp;
-
 	phil->id = id;
 	phil->times_eaten = 0;
 	phil->last_eaten = get_time();
@@ -90,11 +90,5 @@ int	phil_init(t_phil *phil, int id, t_data *data)
 	phil->r_fork = id;
 	if (phil->l_fork == data->phil_amount)
 		phil->l_fork = 0;
-	if (id % 2)
-	{
-		tmp = phil->l_fork;
-		phil->l_fork = phil->r_fork;
-		phil->r_fork = tmp;
-	}
 	return (0);
 }

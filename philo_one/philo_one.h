@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 13:58:01 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 11:33:33 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct  s_data
 	bool			dead;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
+	pthread_mutex_t frick;
 }               t_data;
 
 typedef struct	s_phil
@@ -69,5 +70,6 @@ unsigned long	get_time();
 void			phil_msg(t_phil *, char *, bool);
 int				ft_atoi(char *);
 void			zzz(unsigned long);
+bool			check_death(t_data *);
 
 #endif

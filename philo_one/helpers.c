@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/20 17:38:01 by ingmar        ########   odam.nl         */
+/*   Updated: 2020/11/22 12:30:16 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,19 @@
 #include <sys/time.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <stdbool.h>
+
+bool			check_death(t_data *data)
+{
+	pthread_mutex_lock(&(data->frick));
+	if (data->dead == true)
+	{
+		pthread_mutex_unlock(&(data->frick));
+		return (true);
+	}
+	pthread_mutex_unlock(&(data->frick));
+	return (false);
+}
 
 void			zzz(unsigned long to_sleep)
 {
@@ -58,7 +71,7 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 	unsigned long	time;
 
 	pthread_mutex_lock(&(phil->data->write));
-	if (phil->data->dead == false || force_write == true)
+	if (check_death(phil->data) == false || force_write == true)
 	{
 		time = get_time();
 		ft_putnbr(time - phil->data->start_time);

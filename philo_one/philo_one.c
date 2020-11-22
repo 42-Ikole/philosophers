@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/20 17:23:19 by ingmar        ########   odam.nl         */
+/*   Updated: 2020/11/22 11:36:40 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ static void	monitor(t_phil *phil)
 		time = get_time();
 		if (time - phil[i].last_eaten >= phil->data->ttdie && phil[i].done == false)
 		{
+			pthread_mutex_lock(&phil->data->frick);
 			phil->data->dead = true;
+			pthread_mutex_unlock(&phil->data->frick);
 			phil_msg(&(phil[i]), MSG_DIED, true);
 			pthread_mutex_unlock(&(phil[i].eat));
 			break ;

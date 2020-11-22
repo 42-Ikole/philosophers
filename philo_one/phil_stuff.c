@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/20 17:24:31 by ingmar        ########   odam.nl         */
+/*   Updated: 2020/11/22 12:02:48 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ static void state_sleep(t_phil *phil)
 static bool	take_forks(t_phil *phil, int l_fork, int r_fork)
 {
 	pthread_mutex_lock(&(phil->data->forks[r_fork]));
-	if (phil->data->dead == true)
+	if (check_death(phil->data) == true)
 	{
 		pthread_mutex_unlock(&(phil->data->forks[r_fork]));
 		return (false);
 	}
 	phil_msg(phil, MSG_PICK_FORK, false);
 	pthread_mutex_lock(&(phil->data->forks[l_fork]));
-	if (phil->data->dead == true)
+	if (check_death(phil->data) == true)
 	{
 		pthread_mutex_unlock(&(phil->data->forks[r_fork]));
 		pthread_mutex_unlock(&(phil->data->forks[l_fork]));
@@ -62,13 +62,14 @@ void		phil_stuff(void	*v_phil)
 
 	phil = (t_phil*)v_phil;
 	phil_msg(phil, MSG_APPEAR, false);
+	usleep(phil->id % 2 * 100);
 	while (1)
 	{
 		phil_msg(phil, MSG_THINKING, false);
-		if (phil->data->dead == true)
+		if (check_death(phil->data) == true)
 			break ;
 		state_eat(phil);
-		if (phil->data->dead == true)
+		if (check_death(phil->data) == true)
 			break ;
 		if (phil->times_eaten > 0 && phil->times_eaten == phil->data->must_eat)
 		{
