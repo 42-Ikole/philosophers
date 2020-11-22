@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 12:33:32 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 12:53:47 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static void	create_threads(t_data *data)
 	while (i < data->phil_amount)
 	{
 		if (phil_init(&(phil[i]), i, data))
-			return ; //
+			return (join_threads(threads, i));
 		if (pthread_create(&(threads[i]), NULL, (void*)phil_stuff, &(phil[i])))
 			return (join_threads(threads, i));
 		i++;

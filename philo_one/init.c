@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 12:27:35 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 17:05:08 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,23 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+void		destroy_fucking_mutex_godamnit(pthread_mutex_t *fuck)
+{
+	if (pthread_mutex_destroy(fuck))
+		pthread_mutex_unlock(fuck);
+	pthread_mutex_destroy(fuck);
+}
+
+void		destroy_mutex_babies(pthread_mutex_t *forks, int i)
+{
+	while (i > 0)
+	{
+		i--;
+		destroy_fucking_mutex_godamnit(&forks[i]);
+	}
+	free(forks);
+}
 
 static int init_mutex(t_data *data)
 {
@@ -27,13 +44,23 @@ static int init_mutex(t_data *data)
 	while (i < data->phil_amount)
 	{
 		if (pthread_mutex_init(&(data->forks[i]), NULL))
+		{
+			destroy_mutex_babies(data->forks, i);
 			return (1);
+		}
 		i++;
 	}
 	if (pthread_mutex_init(&(data->write), NULL))
+	{
+		destroy_mutex_babies(data->forks, data->phil_amount);
 		return (1);
+	}
 	if (pthread_mutex_init(&(data->frick), NULL))
+	{
+		destroy_mutex_babies(data->forks, data->phil_amount);
+		destroy_fucking_mutex_godamnit(&data->write);
 		return (1);
+	}
 	return (0);
 }
 
@@ -67,6 +94,7 @@ int	data_init(char **arg, t_data *data)
 	data->tteat = atoi(arg[3]);
 	data->ttsleep = atoi(arg[4]);
 	data->start_time = get_time();
+	data->done_eating = 0;
 	data->dead = false;
 	if (arg[5])
 		data->must_eat = atoi(arg[5]);

@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 11:36:40 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 17:08:16 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ static void	ft_destruction(t_phil *phil, t_data *data, pthread_t *threads)
 {
 	unsigned int i;
 
-	pthread_mutex_destroy(&(data->write));
+	destroy_fucking_mutex_godamnit(&(data->write));
 	i = 0;
 	while (i < data->phil_amount)
 	{
-		pthread_mutex_destroy(&(phil[i].eat));
-		pthread_mutex_destroy(&(data->forks[i]));
+		destroy_fucking_mutex_godamnit(&(phil[i].eat));
+		destroy_fucking_mutex_godamnit(&(data->forks[i]));
 		i++;
 	}
 	free(threads);
@@ -85,7 +85,7 @@ static void	create_threads(t_data *data)
 	while (i < data->phil_amount)
 	{
 		if (phil_init(&(phil[i]), i, data))
-			return ; //
+			return (join_threads(threads, i));
 		if (pthread_create(&(threads[i]), NULL, (void*)phil_stuff, &(phil[i])))
 			return (join_threads(threads, i));
 		i++;

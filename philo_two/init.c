@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 12:36:15 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 17:11:08 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	data_init(char **arg, t_data *data)
 	data->tteat = atoi(arg[3]);
 	data->ttsleep = atoi(arg[4]);
 	data->start_time = get_time();
+	data->done_eating = 0;
 	data->dead = false;
 	if (arg[5])
 		data->must_eat = atoi(arg[5]);
