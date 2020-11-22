@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 18:11:37 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 12:36:15 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static int init_mutex(t_data *data)
+static int init_semaphore(t_data *data)
 {
 	data->forks = sem_open("phil_forks", O_CREAT | O_EXCL, 0644, data->phil_amount);
 	if (data->forks == SEM_FAILED)
@@ -26,6 +26,10 @@ static int init_mutex(t_data *data)
 	if (data->write == SEM_FAILED)
 		return (1);
 	sem_unlink("phil_write");
+	data->die_lock = sem_open("phil_die_lock", O_CREAT | O_EXCL, 0644, 1);
+	if (data->die_lock == SEM_FAILED)
+		return (1);
+	sem_unlink("phil_die_lock");
 	return (0);
 }
 
@@ -64,7 +68,7 @@ int	data_init(char **arg, t_data *data)
 		data->must_eat = atoi(arg[5]);
 	else
 		data->must_eat = 0;
-	if (init_mutex(data) == 1)
+	if (init_semaphore(data) == 1)
 		return (1);
 	return (0);
 }

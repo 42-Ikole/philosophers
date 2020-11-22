@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/20 17:37:53 by ingmar        ########   odam.nl         */
+/*   Updated: 2020/11/22 12:45:35 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,19 @@
 #include <sys/time.h>
 #include <semaphore.h>
 #include <unistd.h>
+#include <stdbool.h>
+
+bool			check_death(t_data *data)
+{
+	sem_wait(data->die_lock);
+	if (data->dead == true)
+	{
+		sem_post(data->die_lock);
+		return (true);
+	}
+	sem_post(data->die_lock);
+	return (false);
+}
 
 void			zzz(unsigned long to_sleep)
 {
@@ -58,7 +71,7 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 	unsigned long	time;
 
 	sem_wait(phil->data->write);
-	if (phil->data->dead == false || force_write == true)
+	if (check_death(phil->data) == false|| force_write == true)
 	{
 		time = get_time();
 		ft_putnbr(time - phil->data->start_time);

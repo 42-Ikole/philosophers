@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   philo_one.c                                        :+:    :+:            */
+/*   philo_two.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 18:06:38 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 12:33:32 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ static void	monitor(t_phil *phil)
 		time = get_time();
 		if (time - phil[i].last_eaten >= phil->data->ttdie && phil[i].done == false)
 		{
+			sem_wait(phil->data->die_lock);
 			phil->data->dead = true;
+			sem_post(phil->data->die_lock);
 			phil_msg(&(phil[i]), MSG_DIED, true);
 			sem_post(phil[i].eat);
 			break ;

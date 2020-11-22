@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   Philo_one.h                                        :+:    :+:            */
+/*   philo_two.h                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/16 13:58:01 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 12:36:58 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct  s_data
 	unsigned int	done_eating;
 	unsigned long	start_time;
 	bool			dead;
+	sem_t			*die_lock;
 	sem_t			*forks;
 	sem_t			*write;
 }               t_data;
@@ -67,5 +68,6 @@ unsigned long	get_time();
 void			phil_msg(t_phil *, char *, bool);
 int				ft_atoi(char *);
 void			zzz(unsigned long);
+bool			check_death(t_data *);
 
 #endif
