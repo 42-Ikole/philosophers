@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 19:58:06 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 20:37:15 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,11 @@ static void	create_threads(t_data *data)
 	{
 		if (phil_init(&(phil[i]), i, data))
 			return (guillotine(pid, i));
-		printf("[%i] - before = [%lu]\n", i, get_time() - data->start_time);
 		pid[i] = fork();
-		printf("[%i] - eftoer = [%lu]\n", i, get_time() - data->start_time);
-		// if (pid[i] < 0)÷
+		if (pid[i] < 0)
+			return (guillotine(pid, i));
 		if (pid[i] == 0)
-			phil_stuff(&phil[i]);
+			monitor(&phil[i]);
 		usleep(100);
 		i++;
 	}
@@ -72,11 +71,8 @@ static void	create_threads(t_data *data)
 	while (i < data->phil_amount)
 	{
 		waitpid(-1, &status, WUNTRACED);
-		if (status == 1)
-		{
-			guillotine(pid, data->phil_amount);
-			break ;
-		}
+		if (WEXITSTATUS(status) == 1)
+			return (guillotine(pid, data->phil_amount));
 		i++;
 	}
 	ft_destruction(phil, data, pid);

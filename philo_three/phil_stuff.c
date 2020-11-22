@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 19:33:41 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 20:34:51 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,6 @@
 #include <pthread.h>
 #include <signal.h>
 #include <stdlib.h>
-
-static void	monitor(t_phil *phil)
-{
-	unsigned long	time;
-	
-	while (1)
-	{
-		sem_wait(phil->eat);
-		time = get_time();
-		if (time - phil->last_eaten >= phil->data->ttdie && phil->done == false)
-		{
-			sem_wait(phil->data->die_lock);
-			phil->data->dead = true;
-			sem_post(phil->data->die_lock);
-			phil_msg(phil, MSG_DIED, true);
-			sem_post(phil->eat);
-			break ;
-		}
-		sem_post(phil->eat);
-		usleep(200);
-	}
-}
 
 static void state_sleep(t_phil *phil)
 {
@@ -82,21 +60,18 @@ static void	state_eat(t_phil *phil)
 	phil_msg(phil, MSG_DROP_FORK, false);
 }
 
-void		phil_stuff(void	*v_phil)
+static void		phil_stuff(void	*v_phil)
 {
 	t_phil		*phil;
-	pthread_t	thread;
 
 	phil = (t_phil*)v_phil;
 	usleep(phil->id % 2 * 100);
-	if (pthread_create(&(thread), NULL, (void*)monitor, phil))
-		exit(1);
 	phil_msg(phil, MSG_APPEAR, false);
 	while (1)
 	{
 		phil_msg(phil, MSG_THINKING, false);
 		if (check_death(phil->data) == true)
-			exit(1);
+			break ;
 		state_eat(phil);
 		if (check_death(phil->data) == true)
 			exit(1);
@@ -105,8 +80,35 @@ void		phil_stuff(void	*v_phil)
 			phil_msg(phil, MSG_DONE, false);
 			phil->data->done_eating++;
 			phil->done = true;
-			exit(0);
+			break ;
 		}
 		state_sleep(phil);
+	}
+}
+
+void	monitor(t_phil *phil)
+{
+	unsigned long	time;
+	pthread_t		thread;
+
+	if (pthread_create(&(thread), NULL, (void*)phil_stuff, phil))
+		exit(1);
+	while (1)
+	{
+		sem_wait(phil->eat);
+		time = get_time();
+		if (time - phil->last_eaten >= phil->data->ttdie && phil->done == false)
+		{
+			sem_wait(phil->data->die_lock);
+			phil->data->dead = true;
+			sem_post(phil->data->die_lock);
+			phil_msg(phil, MSG_DIED, true);
+			sem_post(phil->eat);
+			exit (1);
+		}
+		else if (phil->done == true)
+			exit (0);
+		sem_post(phil->eat);
+		usleep(200);
 	}
 }

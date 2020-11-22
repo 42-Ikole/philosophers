@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 19:24:20 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/22 20:12:45 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct	s_phil
 	t_data			*data;
 }				t_phil;
 
-void			phil_stuff(void *);
+void			monitor(t_phil *);
 
 /*
 **	Init
