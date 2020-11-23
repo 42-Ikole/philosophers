@@ -6,30 +6,44 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 16:50:05 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 13:09:11 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_ONE_H
 # define PHILO_ONE_H
 
-# include "colors.h"
 # include <pthread.h>
 # include <stdbool.h>
-# include <stdio.h> //
 
-# define MSG_EATING "] " COLOR_EATING "is eating" COLOR_RESET "\n"
-# define MSG_SLEEP "] " COLOR_SLEEPING "is sleeping" COLOR_RESET "\n"
-# define MSG_PICK_FORK "] " COLOR_PICK_FORK "picked up a fork" COLOR_RESET "\n"
-# define MSG_DROP_FORK "] " COLOR_DROP_FORK "dropped a fork" COLOR_RESET "\n"
-# define MSG_THINKING "] " COLOR_THINKING "is thinking" COLOR_RESET "\n"
-# define MSG_DONE "] " COLOR_GREEN "is done eating" COLOR_RESET "\n"
-# define MSG_APPEAR "] " COLOR_APPEAR "appeard for an epic feast" COLOR_RESET "\n"
-# define MSG_DIED "] " COLOR_RED "died" COLOR_RESET "\n"
+/*
+** COLOR DEFINES
+*/
+# define COLOR_RED 		"\033[38;5;196m"
+# define COLOR_GREEN	"\033[38;5;46m"
+# define COLOR_BLUE 	"\033[38;5;51m"
+# define COLOR_BLU		"\033[38;5;190m"
+# define COLOR_ORANGE	"\033[38;5;214m"
+# define COLOR_PURPLE	"\033[38;5;98m"
+# define COLOR_YELLOW	"\033[38;5;220m"
+# define COLOR_PINK		"\033[38;5;205m"
+# define COLOR_YOS		"\033[38;5;226"
 
-typedef struct  s_data
+/*
+** COLORED PIHLO MESSAGES
+*/
+# define MSG_EATING "]  \033[38;5;113mis eating\033[37m\n"
+# define MSG_SLEEP "] \033[38;5;117mis sleeping\033[37m\n"
+# define MSG_PICK_FORK "] \033[38;5;218mpicked up a fork\033[37m\n"
+# define MSG_DROP_FORK "] \033[38;5;166mdropped a fork\033[37m\n"
+# define MSG_THINKING "] \033[38;5;101mis thinking\033[37m\n"
+# define MSG_DONE "] \033[38;5;46mis done eating\033[37m\n"
+# define MSG_APPEAR "] \033[38;5;198mappeard for an epic feast\033[37m\n"
+# define MSG_DIED "] \033[38;5;196mdied\033[37m\n"
+
+typedef struct	s_data
 {
-    unsigned int	phil_amount;
+	unsigned int	phil_amount;
 	char			**colors;
 	unsigned long	ttdie;
 	unsigned int	tteat;
@@ -41,7 +55,7 @@ typedef struct  s_data
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
 	pthread_mutex_t frick;
-}               t_data;
+}				t_data;
 
 typedef struct	s_phil
 {
@@ -55,23 +69,27 @@ typedef struct	s_phil
 	t_data			*data;
 }				t_phil;
 
-void			phil_stuff(void *);
+void			phil_stuff(void *v_phil);
 
 /*
 **	Init
 */
-int				data_init(char **, t_data *);
-int				phil_init(t_phil *, int, t_data *);
-void			destroy_fucking_mutex_godamnit(pthread_mutex_t *);
-void			destroy_mutex_babies(pthread_mutex_t *, int);
+int				data_init(char **arg, t_data *data);
+int				phil_init(t_phil *phil, int id, t_data *data);
+
+/*
+** Destruction
+*/
+void			destroy_mutex(pthread_mutex_t *mutex);
+void			destroy_mutex_babies(pthread_mutex_t *forks, int i);
 
 /*
 **	Helpers
 */
-unsigned long	get_time();
-void			phil_msg(t_phil *, char *, bool);
-int				ft_atoi(char *);
-void			zzz(unsigned long);
-bool			check_death(t_data *);
+unsigned long	get_time(void);
+void			phil_msg(t_phil *phil, char *msg, bool force_write);
+int				ft_atoi(char *nb);
+void			zzz(unsigned long sleep_time);
+bool			check_death(t_data *data);
 
 #endif

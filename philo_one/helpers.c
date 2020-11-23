@@ -6,18 +6,16 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 12:30:16 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 13:03:22 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
-#include "colors.h"
-#include <sys/time.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <stdbool.h>
 
-bool			check_death(t_data *data)
+bool		check_death(t_data *data)
 {
 	pthread_mutex_lock(&(data->frick));
 	if (data->dead == true)
@@ -27,23 +25,6 @@ bool			check_death(t_data *data)
 	}
 	pthread_mutex_unlock(&(data->frick));
 	return (false);
-}
-
-void			zzz(unsigned long to_sleep)
-{
-	unsigned long start;
-
-	start = get_time();
-	while (get_time() - start < to_sleep)
-		usleep(100);
-}
-
-unsigned long	get_time()
-{
-	struct timeval current_time;
-
-	gettimeofday(&current_time, NULL);
-	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
 }
 
 static void	ft_putnbr(unsigned long n)
@@ -56,7 +37,7 @@ static void	ft_putnbr(unsigned long n)
 	write(1, print, 1);
 }
 
-static int		ft_strlen(char *str)
+static int	ft_strlen(char *str)
 {
 	int i;
 
@@ -66,7 +47,7 @@ static int		ft_strlen(char *str)
 	return (i);
 }
 
-void			phil_msg(t_phil *phil, char *msg, bool force_write)
+void		phil_msg(t_phil *phil, char *msg, bool force_write)
 {
 	unsigned long	time;
 
@@ -75,7 +56,8 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 	{
 		time = get_time();
 		ft_putnbr(time - phil->data->start_time);
-		write (1, phil->data->colors[phil->id % 8], ft_strlen(phil->data->colors[phil->id % 8]));
+		write(1, phil->data->colors[phil->id % 8],
+			ft_strlen(phil->data->colors[phil->id % 8]));
 		write(1, "\t[", 2);
 		ft_putnbr(phil->id);
 		write(1, msg, ft_strlen(msg));
@@ -83,7 +65,7 @@ void			phil_msg(t_phil *phil, char *msg, bool force_write)
 	pthread_mutex_unlock(&(phil->data->write));
 }
 
-int				ft_atoi(char *str)
+int			ft_atoi(char *str)
 {
 	int	nb;
 	int	sgn;

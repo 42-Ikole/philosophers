@@ -6,19 +6,19 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 17:11:08 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 14:15:57 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
-#include "colors.h"
 #include <semaphore.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-static int init_semaphore(t_data *data)
+static int	init_semaphore(t_data *data)
 {
-	data->forks = sem_open("phil_forks", O_CREAT | O_EXCL, 0644, data->phil_amount);
+	data->forks = sem_open("phil_forks", O_CREAT | O_EXCL, 0644,
+		data->phil_amount);
 	if (data->forks == SEM_FAILED)
 		return (1);
 	sem_unlink("phil_forks");
@@ -33,7 +33,7 @@ static int init_semaphore(t_data *data)
 	return (0);
 }
 
-static int init_colors(t_data *data)
+static int	init_colors(t_data *data)
 {
 	data->colors = malloc(sizeof(char *) * 8);
 	if (!data->colors)
@@ -49,7 +49,7 @@ static int init_colors(t_data *data)
 	return (0);
 }
 
-int	data_init(char **arg, t_data *data)
+int			data_init(char **arg, t_data *data)
 {
 	data->phil_amount = atoi(arg[1]);
 	if (data->phil_amount < 2)
@@ -74,7 +74,7 @@ int	data_init(char **arg, t_data *data)
 	return (0);
 }
 
-int	phil_init(t_phil *phil, int id, t_data *data)
+int			phil_init(t_phil *phil, int id, t_data *data)
 {
 	phil->id = id;
 	phil->times_eaten = 0;

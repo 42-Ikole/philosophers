@@ -6,41 +6,20 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 17:05:08 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 13:10:38 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
-#include "colors.h"
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-void		destroy_fucking_mutex_godamnit(pthread_mutex_t *fuck)
+static int	init_mutex(t_data *data, unsigned int i)
 {
-	if (pthread_mutex_destroy(fuck))
-		pthread_mutex_unlock(fuck);
-	pthread_mutex_destroy(fuck);
-}
-
-void		destroy_mutex_babies(pthread_mutex_t *forks, int i)
-{
-	while (i > 0)
-	{
-		i--;
-		destroy_fucking_mutex_godamnit(&forks[i]);
-	}
-	free(forks);
-}
-
-static int init_mutex(t_data *data)
-{
-	unsigned int	i;
-
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->phil_amount);
 	if (!data->forks)
 		return (1);
-	i = 0;
 	while (i < data->phil_amount)
 	{
 		if (pthread_mutex_init(&(data->forks[i]), NULL))
@@ -58,13 +37,13 @@ static int init_mutex(t_data *data)
 	if (pthread_mutex_init(&(data->frick), NULL))
 	{
 		destroy_mutex_babies(data->forks, data->phil_amount);
-		destroy_fucking_mutex_godamnit(&data->write);
+		destroy_mutex(&data->write);
 		return (1);
 	}
 	return (0);
 }
 
-static int init_colors(t_data *data)
+static int	init_colors(t_data *data)
 {
 	data->colors = malloc(sizeof(char *) * 8);
 	if (!data->colors)
@@ -80,7 +59,7 @@ static int init_colors(t_data *data)
 	return (0);
 }
 
-int	data_init(char **arg, t_data *data)
+int			data_init(char **arg, t_data *data)
 {
 	data->phil_amount = atoi(arg[1]);
 	if (data->phil_amount < 2)
@@ -100,12 +79,12 @@ int	data_init(char **arg, t_data *data)
 		data->must_eat = atoi(arg[5]);
 	else
 		data->must_eat = 0;
-	if (init_mutex(data) == 1)
+	if (init_mutex(data, 0) == 1)
 		return (1);
 	return (0);
 }
 
-int	phil_init(t_phil *phil, int id, t_data *data)
+int			phil_init(t_phil *phil, int id, t_data *data)
 {
 	phil->id = id;
 	phil->times_eaten = 0;

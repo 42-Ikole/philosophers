@@ -6,17 +6,19 @@
 #    By: ikole <ikole@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/11/15 16:36:12 by ikole         #+#    #+#                  #
-#    Updated: 2020/11/22 12:31:23 by ikole         ########   odam.nl          #
+#    Updated: 2020/11/23 13:07:14 by ikole         ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= philo_one
 
-SRC		= philo_one.c init.c helpers.c phil_stuff.c
+SRC		= philo_one.c init.c helpers.c phil_stuff.c time.c destruction.c
 
 FLAGS	= -Wall -Wextra -Werror -pthread
 
-all: $(SRC)
+all: $(NAME)
+
+$(NAME): $(SRC)
 	gcc $(FLAGS) $(SRC) -o $(NAME)
 
 re: fclean all

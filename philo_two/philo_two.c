@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 12:53:47 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 14:23:02 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <semaphore.h>
 #include <pthread.h>
 
-static void	ft_destruction(t_phil *phil, t_data *data, pthread_t *threads)
+static void		ft_destruction(t_phil *phil, t_data *data, pthread_t *threads)
 {
 	unsigned int i;
 
@@ -30,9 +30,10 @@ static void	ft_destruction(t_phil *phil, t_data *data, pthread_t *threads)
 	}
 	free(threads);
 	free(data->colors);
+	free(phil);
 }
 
-static void	monitor(t_phil *phil)
+static void		monitor(t_phil *phil)
 {
 	unsigned int	i;
 	unsigned long	time;
@@ -42,7 +43,8 @@ static void	monitor(t_phil *phil)
 	{
 		sem_wait(phil[i].eat);
 		time = get_time();
-		if (time - phil[i].last_eaten >= phil->data->ttdie && phil[i].done == false)
+		if (time - phil[i].last_eaten >= phil->data->ttdie &&
+			phil[i].done == false)
 		{
 			sem_wait(phil->data->die_lock);
 			phil->data->dead = true;
@@ -56,14 +58,11 @@ static void	monitor(t_phil *phil)
 			break ;
 		i++;
 		if (i == phil->data->phil_amount)
-		{
 			i = 0;
-			usleep(200);
-		}
 	}
 }
 
-static void join_threads(pthread_t *threads, int i)
+static void		join_threads(pthread_t *threads, int i)
 {
 	while (i > 0)
 	{
@@ -72,12 +71,12 @@ static void join_threads(pthread_t *threads, int i)
 	}
 }
 
-static void	create_threads(t_data *data)
+static void		create_threads(t_data *data)
 {
 	pthread_t		*threads;
 	t_phil			*phil;
 	unsigned int	i;
-	
+
 	threads = malloc(sizeof(pthread_t) * data->phil_amount);
 	phil = malloc(sizeof(t_phil) * data->phil_amount);
 	if (!threads || !phil)
@@ -96,7 +95,7 @@ static void	create_threads(t_data *data)
 	ft_destruction(phil, data, threads);
 }
 
-int main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	t_data	data;
 
@@ -105,5 +104,5 @@ int main(int argc, char **argv)
 	if (data_init(argv, &data))
 		return (1);
 	create_threads(&data);
-    return (0);
+	return (0);
 }

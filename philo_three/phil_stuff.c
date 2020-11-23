@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 20:34:51 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 17:02:35 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <signal.h>
 #include <stdlib.h>
 
-static void state_sleep(t_phil *phil)
+static void	state_sleep(t_phil *phil)
 {
 	phil_msg(phil, MSG_SLEEP, false);
 	zzz(phil->data->ttsleep);
@@ -60,7 +60,7 @@ static void	state_eat(t_phil *phil)
 	phil_msg(phil, MSG_DROP_FORK, false);
 }
 
-static void		phil_stuff(void	*v_phil)
+static void	phil_stuff(void *v_phil)
 {
 	t_phil		*phil;
 
@@ -86,7 +86,7 @@ static void		phil_stuff(void	*v_phil)
 	}
 }
 
-void	monitor(t_phil *phil)
+void		monitor(t_phil *phil)
 {
 	unsigned long	time;
 	pthread_t		thread;
@@ -104,10 +104,10 @@ void	monitor(t_phil *phil)
 			sem_post(phil->data->die_lock);
 			phil_msg(phil, MSG_DIED, true);
 			sem_post(phil->eat);
-			exit (1);
+			exit(1);
 		}
 		else if (phil->done == true)
-			exit (0);
+			exit(0);
 		sem_post(phil->eat);
 		usleep(200);
 	}

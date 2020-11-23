@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 17:20:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 12:34:41 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 14:14:16 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <semaphore.h>
 
-static void state_sleep(t_phil *phil)
+static void	state_sleep(t_phil *phil)
 {
 	phil_msg(phil, MSG_SLEEP, false);
 	zzz(phil->data->ttsleep);
@@ -57,7 +57,7 @@ static void	state_eat(t_phil *phil)
 	phil_msg(phil, MSG_DROP_FORK, false);
 }
 
-void		phil_stuff(void	*v_phil)
+void		phil_stuff(void *v_phil)
 {
 	t_phil *phil;
 

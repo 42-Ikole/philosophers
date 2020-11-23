@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/22 20:37:15 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/23 17:03:43 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	ft_destruction(t_phil *phil, t_data *data, pid_t *pid)
 	free(data->colors);
 }
 
-static void guillotine(pid_t *pid, int i)
+static void	guillotine(pid_t *pid, int i)
 {
 	while (i > 0)
 	{
@@ -43,13 +43,28 @@ static void guillotine(pid_t *pid, int i)
 	}
 }
 
+static void	wait_phil(t_data *data, t_phil *phil, pid_t *pid)
+{
+	unsigned int	i;
+	int				status;
+
+	i = 0;
+	while (i < data->phil_amount)
+	{
+		waitpid(-1, &status, WUNTRACED);
+		if (WEXITSTATUS(status) == 1)
+			return (guillotine(pid, data->phil_amount));
+		i++;
+	}
+	ft_destruction(phil, data, pid);
+}
+
 static void	create_threads(t_data *data)
 {
 	pid_t			*pid;
 	t_phil			*phil;
 	unsigned int	i;
-	int				status;
-	
+
 	pid = malloc(sizeof(pid_t) * data->phil_amount);
 	phil = malloc(sizeof(t_phil) * data->phil_amount);
 	if (!pid || !phil)
@@ -67,18 +82,10 @@ static void	create_threads(t_data *data)
 		usleep(100);
 		i++;
 	}
-	i = 0;
-	while (i < data->phil_amount)
-	{
-		waitpid(-1, &status, WUNTRACED);
-		if (WEXITSTATUS(status) == 1)
-			return (guillotine(pid, data->phil_amount));
-		i++;
-	}
-	ft_destruction(phil, data, pid);
+	wait_phil(data, phil, pid);
 }
 
-int main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	t_data	data;
 
@@ -87,5 +94,5 @@ int main(int argc, char **argv)
 	if (data_init(argv, &data))
 		return (1);
 	create_threads(&data);
-    return (0);
+	return (0);
 }
