@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/28 13:00:10 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/28 19:48:27 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 /*
 ** COLORED PIHLO MESSAGES
 */
-# define MSG_EATING "]  \033[38;5;113mis eating\033[37m\n"
+# define MSG_EATING "] \033[38;5;113mis eating\033[37m\n"
 # define MSG_SLEEP "] \033[38;5;117mis sleeping\033[37m\n"
 # define MSG_PICK_FORK "] \033[38;5;218mpicked up a fork\033[37m\n"
 # define MSG_DROP_FORK "] \033[38;5;166mdropped a fork\033[37m\n"

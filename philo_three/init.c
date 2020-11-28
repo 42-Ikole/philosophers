@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/23 16:56:06 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/28 19:46:51 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	init_colors(t_data *data)
 
 int			data_init(char **arg, t_data *data)
 {
-	data->phil_amount = atoi(arg[1]);
+	data->phil_amount = ft_atoi(arg[1]);
 	if (data->phil_amount < 2)
 	{
 		write(2, "cmon man, we need atleast 2 philosophers?\n", 31);
@@ -59,14 +59,14 @@ int			data_init(char **arg, t_data *data)
 	}
 	if (init_colors(data))
 		return (1);
-	data->ttdie = atoi(arg[2]);
-	data->tteat = atoi(arg[3]);
-	data->ttsleep = atoi(arg[4]);
+	data->ttdie = ft_atoi(arg[2]);
+	data->tteat = ft_atoi(arg[3]);
+	data->ttsleep = ft_atoi(arg[4]);
 	data->start_time = get_time();
 	data->done_eating = 0;
 	data->dead = false;
 	if (arg[5])
-		data->must_eat = atoi(arg[5]);
+		data->must_eat = ft_atoi(arg[5]);
 	else
 		data->must_eat = 0;
 	if (init_semaphore(data) == 1)
