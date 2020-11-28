@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/23 17:03:43 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/28 13:45:49 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,11 @@
 
 static void	ft_destruction(t_phil *phil, t_data *data, pid_t *pid)
 {
-	unsigned int i;
-
-	sem_close(data->write);
-	sem_close(data->die_lock);
-	i = 0;
-	while (i < data->phil_amount)
-	{
-		sem_close(phil[i].eat);
-		sem_close(data->forks);
-		i++;
-	}
-	free(pid);
 	free(data->colors);
+	if (pid)
+		free(pid);
+	if (phil)
+		free(phil);
 }
 
 static void	guillotine(pid_t *pid, int i)
@@ -39,11 +31,11 @@ static void	guillotine(pid_t *pid, int i)
 	while (i > 0)
 	{
 		i--;
-		kill(pid[i], SIGKILL);
+		kill(pid[i], BEHEAD);
 	}
 }
 
-static void	wait_phil(t_data *data, t_phil *phil, pid_t *pid)
+static void	wait_phil(t_data *data, pid_t *pid)
 {
 	unsigned int	i;
 	int				status;
@@ -56,19 +48,12 @@ static void	wait_phil(t_data *data, t_phil *phil, pid_t *pid)
 			return (guillotine(pid, data->phil_amount));
 		i++;
 	}
-	ft_destruction(phil, data, pid);
 }
 
-static void	create_threads(t_data *data)
+static void	create_processes(t_data *data, pid_t *pid, t_phil *phil)
 {
-	pid_t			*pid;
-	t_phil			*phil;
 	unsigned int	i;
 
-	pid = malloc(sizeof(pid_t) * data->phil_amount);
-	phil = malloc(sizeof(t_phil) * data->phil_amount);
-	if (!pid || !phil)
-		return ;
 	i = 0;
 	while (i < data->phil_amount)
 	{
@@ -82,17 +67,23 @@ static void	create_threads(t_data *data)
 		usleep(100);
 		i++;
 	}
-	wait_phil(data, phil, pid);
+	wait_phil(data, pid);
 }
 
 int			main(int argc, char **argv)
 {
 	t_data	data;
+	pid_t	*pid;
+	t_phil	*phil;
 
 	if (!(argc == 5 || argc == 6))
 		return (1);
 	if (data_init(argv, &data))
 		return (1);
-	create_threads(&data);
+	pid = malloc(sizeof(pid_t) * data.phil_amount);
+	phil = malloc(sizeof(t_phil) * data.phil_amount);
+	if (pid && phil)
+		create_processes(&data, pid, phil);
+	ft_destruction(phil, &data, pid);
 	return (0);
 }

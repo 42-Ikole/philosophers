@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/23 14:07:48 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/28 15:41:25 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ static void	ft_destruction(t_phil *phil, t_data *data, pthread_t *threads)
 		destroy_mutex(&(data->forks[i]));
 		i++;
 	}
-	free(threads);
-	free(data->forks);
 	free(data->colors);
-	free(phil);
+	free(data->forks);
+	if (threads)
+		free(threads);
+	if (phil)
+		free(phil);
 }
 
 static void	monitor(t_phil *phil)
@@ -70,16 +72,10 @@ static void	join_threads(pthread_t *threads, int i)
 	}
 }
 
-static void	create_threads(t_data *data)
+static void	create_threads(t_data *data, pthread_t *threads, t_phil *phil)
 {
-	pthread_t		*threads;
-	t_phil			*phil;
 	unsigned int	i;
 
-	threads = malloc(sizeof(pthread_t) * data->phil_amount);
-	phil = malloc(sizeof(t_phil) * data->phil_amount);
-	if (!threads || !phil)
-		return ;
 	i = 0;
 	while (i < data->phil_amount)
 	{
@@ -91,17 +87,22 @@ static void	create_threads(t_data *data)
 	}
 	monitor(phil);
 	join_threads(threads, data->phil_amount);
-	ft_destruction(phil, data, threads);
 }
 
 int			main(int argc, char **argv)
 {
-	t_data	data;
+	t_data		data;
+	pthread_t	*threads;
+	t_phil		*phil;
 
 	if (!(argc == 5 || argc == 6))
 		return (1);
 	if (data_init(argv, &data))
 		return (1);
-	create_threads(&data);
+	threads = malloc(sizeof(pthread_t) * data.phil_amount);
+	phil = malloc(sizeof(t_phil) * data.phil_amount);
+	if (threads && phil)
+		create_threads(&data, threads, phil);
+	ft_destruction(phil, &data, threads);
 	return (0);
 }

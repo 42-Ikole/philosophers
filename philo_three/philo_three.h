@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/23 16:44:41 by ikole         ########   odam.nl         */
+/*   Updated: 2020/11/28 13:00:10 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@
 # define MSG_DONE "] \033[38;5;46mis done eating\033[37m\n"
 # define MSG_APPEAR "] \033[38;5;198mappeard for an epic feast\033[37m\n"
 # define MSG_DIED "] \033[38;5;196mdied\033[37m\n"
+
+/*
+** funny define for SIGKILL
+*/
+# define BEHEAD 9
 
 typedef struct	s_data
 {
