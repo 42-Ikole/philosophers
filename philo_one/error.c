@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/05 15:24:01 by ikole         #+#    #+#                 */
-/*   Updated: 2020/12/05 15:39:18 by ikole         ########   odam.nl         */
+/*   Updated: 2020/12/05 16:03:35 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include <unistd.h>
 #include "philo_one.h"
 
-bool 		error(char *msg)
+bool		error(char *msg)
 {
-	write (2, msg, ft_strlen(msg));
+	write(2, msg, ft_strlen(msg));
 	return (1);
 }
 

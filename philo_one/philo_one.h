@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/12/05 15:30:58 by ikole         ########   odam.nl         */
+/*   Updated: 2020/12/05 16:06:26 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,40 +19,40 @@
 /*
 ** COLOR DEFINES
 */
-# define COLOR_RED 		"\033[38;5;196m"
-# define COLOR_GREEN	"\033[38;5;46m"
-# define COLOR_BLUE 	"\033[38;5;51m"
-# define COLOR_BLU		"\033[38;5;190m"
-# define COLOR_ORANGE	"\033[38;5;214m"
-# define COLOR_PURPLE	"\033[38;5;98m"
-# define COLOR_YELLOW	"\033[38;5;220m"
-# define COLOR_PINK		"\033[38;5;205m"
-# define COLOR_YOS		"\033[38;5;226"
+# define COLOR_RED 		"\e[38;5;196m"
+# define COLOR_GREEN	"\e[38;5;46m"
+# define COLOR_BLUE 	"\e[38;5;51m"
+# define COLOR_BLU		"\e[38;5;190m"
+# define COLOR_ORANGE	"\e[38;5;214m"
+# define COLOR_PURPLE	"\e[38;5;98m"
+# define COLOR_YELLOW	"\e[38;5;220m"
+# define COLOR_PINK		"\e[38;5;205m"
+# define COLOR_YOS		"\e[38;5;226"
 
 /*
 ** COLORED PIHLO MESSAGES
 */
-# define MSG_EATING		"] \033[38;5;113mis eating\033[37m\n"
-# define MSG_SLEEP		"] \033[38;5;117mis sleeping\033[37m\n"
-# define MSG_PICK_FORK	"] \033[38;5;218mpicked up a fork\033[37m\n"
-# define MSG_DROP_FORK	"] \033[38;5;166mdropped a fork\033[37m\n"
-# define MSG_THINKING	"] \033[38;5;101mis thinking\033[37m\n"
-# define MSG_DONE		"] \033[38;5;46mis done eating\033[37m\n"
-# define MSG_APPEAR		"] \033[38;5;198mappeard for an epic feast\033[37m\n"
-# define MSG_DIED		"] \033[38;5;196mdied\033[37m\n"
+# define MSG_EATING		"] \e[38;5;113mis eating\e[37m\n"
+# define MSG_SLEEP		"] \e[38;5;117mis sleeping\e[37m\n"
+# define MSG_PICK_FORK	"] \e[38;5;218mpicked up a fork\e[37m\n"
+# define MSG_DROP_FORK	"] \e[38;5;166mdropped a fork\e[37m\n"
+# define MSG_THINKING	"] \e[38;5;101mis thinking\e[37m\n"
+# define MSG_DONE		"] \e[38;5;46mis done eating\e[37m\n"
+# define MSG_APPEAR		"] \e[38;5;198mappeard for an epic feast\e[37m\n"
+# define MSG_DIED		"] \e[38;5;196mdied\e[37m\n"
 
 /*
 ** ERROR MESSAGES
 */
-# define ERR_MISSARG	"\033[38;5;196mYou are missing some arguments\n"
-# define ERR_PHILAMT	"\033[38;5;196mYou need atleast two philosophers\n"
-# define ERR_TOOMANY	"\033[38;5;196mMore than 200 philosophers is prohibited\n"
-# define ERR_TTDIE		"\033[38;5;196mTime to die needs te be atleast 60ms\n"
-# define ERR_TTEAT		"\033[38;5;196mTime to sleep needs te be atleast 60ms\n"
-# define ERR_TTSLEEP	"\033[38;5;196mTime to eat needs te be atleast 60ms\n"
-# define ERR_NOEAT		"\033[38;5;196mEating zero times is weird\n"
-# define ERR_NAN		"\033[38;5;196mNOT A DIGIT <3 ABEL\n"
-# define ERR_IMPOSSIBLE	"\033[38;5;220m<WARNING> \033[38;5;196mThis input is impossible!\n"
+# define ERR_MISSARG	"\e[38;5;196mYou are missing some arguments\n"
+# define ERR_PHILAMT	"\e[38;5;196mYou need atleast two philosophers\n"
+# define ERR_TOOMANY	"\e[38;5;196mOver 200 philosophers is prohibited\n"
+# define ERR_TTDIE		"\e[38;5;196mTime to die needs te be atleast 60ms\n"
+# define ERR_TTEAT		"\e[38;5;196mTime to sleep needs te be atleast 60ms\n"
+# define ERR_TTSLEEP	"\e[38;5;196mTime to eat needs te be atleast 60ms\n"
+# define ERR_NOEAT		"\e[38;5;196mEating zero times is weird\n"
+# define ERR_NAN		"\e[38;5;196mNOT A DIGIT <3 ABEL\n"
+# define ERR_IMPOSSIBLE	"\e[38;5;220m<WARNING> \e[38;5;196mDeath is comming!\n"
 
 typedef struct	s_data
 {
@@ -111,6 +111,5 @@ bool			check_death(t_data *data);
 */
 bool			error(char *msg);
 bool			validate_input(char **arg, t_data *dat);
-
 
 #endif
