@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/28 15:41:25 by ikole         ########   odam.nl         */
+/*   Updated: 2020/12/05 15:29:06 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ static void	monitor(t_phil *phil)
 		if (time - phil[i].last_eaten >= phil->data->ttdie &&
 			phil[i].done == false)
 		{
-			pthread_mutex_lock(&phil->data->frick);
+			pthread_mutex_lock(&phil->data->check_death);
 			phil->data->dead = true;
-			pthread_mutex_unlock(&phil->data->frick);
+			pthread_mutex_unlock(&phil->data->check_death);
 			phil_msg(&(phil[i]), MSG_DIED, true);
 			pthread_mutex_unlock(&(phil[i].eat));
 			break ;
@@ -96,7 +96,7 @@ int			main(int argc, char **argv)
 	t_phil		*phil;
 
 	if (!(argc == 5 || argc == 6))
-		return (1);
+		return (error(ERR_MISSARG));
 	if (data_init(argv, &data))
 		return (1);
 	threads = malloc(sizeof(pthread_t) * data.phil_amount);

@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/28 19:46:40 by ikole         ########   odam.nl         */
+/*   Updated: 2020/12/05 15:27:59 by ikole         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	init_mutex(t_data *data, unsigned int i)
 		destroy_mutex_babies(data->forks, data->phil_amount);
 		return (1);
 	}
-	if (pthread_mutex_init(&(data->frick), NULL))
+	if (pthread_mutex_init(&(data->check_death), NULL))
 	{
 		destroy_mutex_babies(data->forks, data->phil_amount);
 		destroy_mutex(&data->write);
@@ -62,11 +62,6 @@ static int	init_colors(t_data *data)
 int			data_init(char **arg, t_data *data)
 {
 	data->phil_amount = ft_atoi(arg[1]);
-	if (data->phil_amount < 2)
-	{
-		write(2, "cmon man, we need atleast 2 philosophers?\n", 31);
-		return (1);
-	}
 	if (init_colors(data))
 		return (1);
 	data->ttdie = ft_atoi(arg[2]);
@@ -79,6 +74,8 @@ int			data_init(char **arg, t_data *data)
 		data->must_eat = ft_atoi(arg[5]);
 	else
 		data->must_eat = 0;
+	if (validate_input(arg, data) == 1)
+		return (1);
 	if (init_mutex(data, 0) == 1)
 		return (1);
 	return (0);
