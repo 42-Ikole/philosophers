@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:52:58 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/23 16:53:32 by ikole         ########   odam.nl         */
+/*   Updated: 2021/01/26 14:48:53 by ingmar        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	ft_putnbr(unsigned long n)
 	write(1, print, 1);
 }
 
-static int	ft_strlen(char *str)
+int			ft_strlen(char *str)
 {
 	int i;
 
@@ -68,22 +68,14 @@ void		phil_msg(t_phil *phil, char *msg, bool force_write)
 int			ft_atoi(char *str)
 {
 	int	nb;
-	int	sgn;
 	int i;
 
 	nb = 0;
-	sgn = 1;
 	i = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
-		i++;
-	if (str[i] == '+')
-		i++;
-	if (str[i] == '-')
-		sgn = -1;
 	while (str[i])
 	{
 		nb = nb * 10 + str[i] - '0';
 		i++;
 	}
-	return (nb * sgn);
+	return (nb);
 }

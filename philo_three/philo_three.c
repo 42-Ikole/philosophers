@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:35:14 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/28 13:45:49 by ikole         ########   odam.nl         */
+/*   Updated: 2021/01/26 15:53:25 by ingmar        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int			main(int argc, char **argv)
 	t_phil	*phil;
 
 	if (!(argc == 5 || argc == 6))
-		return (1);
+		return (error(ERR_MISSARG));
 	if (data_init(argv, &data))
 		return (1);
 	pid = malloc(sizeof(pid_t) * data.phil_amount);

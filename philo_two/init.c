@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:48:42 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/28 19:47:05 by ikole         ########   odam.nl         */
+/*   Updated: 2021/01/26 14:39:31 by ingmar        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int			data_init(char **arg, t_data *data)
 		data->must_eat = ft_atoi(arg[5]);
 	else
 		data->must_eat = 0;
+	if (validate_input(arg, data) == 1)
+		return (1);
 	if (init_semaphore(data) == 1)
 		return (1);
 	return (0);

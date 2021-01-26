@@ -6,13 +6,13 @@
 #    By: ikole <ikole@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/11/15 16:36:12 by ikole         #+#    #+#                  #
-#    Updated: 2020/11/28 19:46:24 by ikole         ########   odam.nl          #
+#    Updated: 2021/01/26 16:04:09 by ingmar        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= philo_three
 
-SRC		= philo_three.c init.c helpers.c phil_stuff.c time.c
+SRC		= philo_three.c init.c helpers.c phil_stuff.c time.c error.c
 
 FLAGS	= -Wall -Wextra -Werror -pthread
 

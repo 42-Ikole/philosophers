@@ -6,7 +6,7 @@
 /*   By: ikole <ikole@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/15 16:37:53 by ikole         #+#    #+#                 */
-/*   Updated: 2020/11/28 19:48:32 by ikole         ########   odam.nl         */
+/*   Updated: 2021/01/26 14:48:24 by ingmar        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,27 @@
 /*
 ** COLORED PIHLO MESSAGES
 */
-# define MSG_EATING "] \033[38;5;113mis eating\033[37m\n"
-# define MSG_SLEEP "] \033[38;5;117mis sleeping\033[37m\n"
-# define MSG_PICK_FORK "] \033[38;5;218mpicked up a fork\033[37m\n"
-# define MSG_DROP_FORK "] \033[38;5;166mdropped a fork\033[37m\n"
-# define MSG_THINKING "] \033[38;5;101mis thinking\033[37m\n"
-# define MSG_DONE "] \033[38;5;46mis done eating\033[37m\n"
-# define MSG_APPEAR "] \033[38;5;198mappeard for an epic feast\033[37m\n"
-# define MSG_DIED "] \033[38;5;196mdied\033[37m\n"
+# define MSG_EATING		"] \033[38;5;113mis eating\033[37m\n"
+# define MSG_SLEEP		"] \033[38;5;117mis sleeping\033[37m\n"
+# define MSG_PICK_FORK	"] \033[38;5;218mpicked up a fork\033[37m\n"
+# define MSG_DROP_FORK	"] \033[38;5;166mdropped a fork\033[37m\n"
+# define MSG_THINKING	"] \033[38;5;101mis thinking\033[37m\n"
+# define MSG_DONE		"] \033[38;5;46mis done eating\033[37m\n"
+# define MSG_APPEAR		"] \033[38;5;198mappeard for an epic feast\033[37m\n"
+# define MSG_DIED		"] \033[38;5;196mdied\033[37m\n"
+
+/*
+** ERROR MESSAGES
+*/
+# define ERR_MISSARG	"\e[38;5;196mYou are missing some arguments\n"
+# define ERR_PHILAMT	"\e[38;5;196mYou need atleast two philosophers\n"
+# define ERR_TOOMANY	"\e[38;5;196mOver 200 philosophers is prohibited\n"
+# define ERR_TTDIE		"\e[38;5;196mTime to die needs te be atleast 60ms\n"
+# define ERR_TTEAT		"\e[38;5;196mTime to sleep needs te be atleast 60ms\n"
+# define ERR_TTSLEEP	"\e[38;5;196mTime to eat needs te be atleast 60ms\n"
+# define ERR_NOEAT		"\e[38;5;196mEating zero times is weird\n"
+# define ERR_NAN		"\e[38;5;196mNOT A DIGIT <3 ABEL\n"
+# define ERR_IMPOSSIBLE	"\e[38;5;220m<WARNING> \e[38;5;196mDeath is comming!\n"
 
 typedef struct	s_data
 {
@@ -78,10 +91,21 @@ int				phil_init(t_phil *phil, int id, t_data *data);
 /*
 **	Helpers
 */
-unsigned long	get_time(void);
+int				ft_strlen(char *str);
 void			phil_msg(t_phil *phil, char *msg, bool force_write);
 int				ft_atoi(char *nb);
 void			zzz(unsigned long sleep_time);
 bool			check_death(t_data *data);
+
+/*
+** TIME
+*/
+unsigned long	get_time(void);
+
+/*
+** Errors
+*/
+bool			error(char *msg);
+bool			validate_input(char **arg, t_data *dat);
 
 #endif
