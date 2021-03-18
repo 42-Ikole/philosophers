@@ -12,7 +12,8 @@ and then run with
 ```
 
 ### ❗ note
-- the must eat amount is optional!
+- The must eat amount is optional!
+- All the time variables are in milliseconds.
 - This was made on mac, due to the usage of **usleep** the values have to be modified for it to work on linux!
 
 
