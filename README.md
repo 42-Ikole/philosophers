@@ -19,8 +19,10 @@ and then run with
 ### 💤 code
 **Philo one:**
   - Uses mutex locks and threads.
+
 **Philo two:**
   - Uses semaphores and threads.
+
 **Philo Three:**
   - Uses semaphores, threads and processes.
 
