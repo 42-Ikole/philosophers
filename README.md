@@ -16,6 +16,13 @@ and then run with
 - All the time variables are in milliseconds.
 - This was made on mac, due to the usage of **usleep** the values have to be modified for it to work on linux!
 
+### 💤 code
+**Philo one:**
+  - Uses mutex locks and threads.
+**Philo two:**
+  - Uses semaphores and threads.
+**Philo Three:**
+  - Uses semaphores, threads and processes.
 
 ### ⚠️ bugs
 - This project was written on mac, due to the usage of **usleep** the values used have to be changed in order to make it work on linux!
