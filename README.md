@@ -27,4 +27,4 @@ and then run with
   - Uses semaphores, threads and processes.
 
 ### ⚠️ bugs
-- This project was written on mac, due to the usage of **usleep** the values used have to be changed in order to make it work on linux!
+- This project was written on mac, due to differences in how processes work some **usleep** values have to be changed in order to make it work on linux!
